@@ -6,6 +6,7 @@ import http from 'http'
 
 import connectDB from './config/mongo'
 import driverRoute from './interfaces/routes/driverRoute'
+import adminRoute from './interfaces/routes/adminRoute'
 
 const app=express()
 const server=http.createServer(app)
@@ -27,8 +28,9 @@ app.use(
 connectDB()
 
 app.use('/driver',driverRoute)
+app.use('/admin',adminRoute)
 
-app.get('/',(req:Request,res:Response)=>{
+app.get('/',(req:Request,res:Response)=>{    
     res.send().status(200)
 })
 const port=process.env.PORT||3002

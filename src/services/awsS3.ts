@@ -23,7 +23,7 @@ async function uploadToS3(file: Express.Multer.File) {
   try {
     await s3Client.send(command);
     console.log("Uploaded file to S3 successfully.");
-    return cloudfrontURL + filename;
+    return cloudfrontURL+filename;
   } catch (error) {
     console.error("Error uploading file to S3:", error);
     return (error as Error).message;

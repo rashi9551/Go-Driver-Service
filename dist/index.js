@@ -10,6 +10,7 @@ const express_session_1 = __importDefault(require("express-session"));
 const http_1 = __importDefault(require("http"));
 const mongo_1 = __importDefault(require("./config/mongo"));
 const driverRoute_1 = __importDefault(require("./interfaces/routes/driverRoute"));
+const adminRoute_1 = __importDefault(require("./interfaces/routes/adminRoute"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 app.use(express_1.default.json({ limit: '50mb' }));
@@ -25,6 +26,7 @@ app.use((0, express_session_1.default)({
 }));
 (0, mongo_1.default)();
 app.use('/driver', driverRoute_1.default);
+app.use('/admin', adminRoute_1.default);
 app.get('/', (req, res) => {
     res.send().status(200);
 });

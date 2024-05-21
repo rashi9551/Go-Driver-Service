@@ -134,7 +134,6 @@ const DriverSchema: Schema = new Schema({
     },
     identification: {
         type: Boolean,
-        default: false,
     },
 
     wallet: {

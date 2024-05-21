@@ -18,5 +18,29 @@ exports.default = {
         const jwtSeceretKey = "Rashid";
         const token = jsonwebtoken_1.default.sign({ clientId }, jwtSeceretKey);
         return token;
+    }),
+    verifyToken: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        try {
+            const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.trim().split(" ")[1];
+            console.log(token);
+            if (!token) {
+                res.status(401).json({ message: "Unauthorized" });
+            }
+            else {
+                try {
+                    const jwtSecretKey = "Rashid";
+                    const decodedToken = jsonwebtoken_1.default.verify(token, jwtSecretKey);
+                    // req.clientId = decodedToken.clientId;
+                    next();
+                }
+                catch (error) {
+                    res.status(500).json({ message: error.message });
+                }
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     })
 };

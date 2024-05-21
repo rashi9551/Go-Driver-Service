@@ -94,7 +94,6 @@ const DriverSchema = new mongoose_1.Schema({
     },
     identification: {
         type: Boolean,
-        default: false,
     },
     wallet: {
         balance: {

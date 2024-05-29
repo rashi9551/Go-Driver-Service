@@ -8,6 +8,8 @@ import connectDB from './config/mongo'
 import driverRoute from './interfaces/routes/driverRoute'
 import adminRoute from './interfaces/routes/adminRoute'
 
+import { setUpSocketIO } from './services/socket-io'
+
 const app=express()
 const server=http.createServer(app)
 app.use(express.json({limit:'50mb'}))
@@ -26,6 +28,7 @@ app.use(
     })
 );
 connectDB()
+setUpSocketIO(server)
 
 app.use('/driver',driverRoute)
 app.use('/admin',adminRoute)

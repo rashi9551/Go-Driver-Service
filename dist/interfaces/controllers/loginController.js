@@ -23,5 +23,15 @@ exports.default = {
         catch (error) {
             res.status(500).json({ error: error.message });
         }
-    })
+    }),
+    checkGoogleLoginDriver: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { email } = req.body;
+            const response = yield login_1.default.checkGoogleLoginDriver(email);
+            res.json(response);
+        }
+        catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }),
 };

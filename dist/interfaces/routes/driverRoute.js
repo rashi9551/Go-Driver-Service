@@ -8,8 +8,9 @@ const registerController_1 = __importDefault(require("../controllers/registerCon
 const loginController_1 = __importDefault(require("../controllers/loginController"));
 const multer_1 = __importDefault(require("../../middleware/multer"));
 const driverRouter = (0, express_1.Router)();
-driverRouter.post("/registerDriver", registerController_1.default.register);
 driverRouter.post("/checkLoginDriver", loginController_1.default.checkLogin);
+driverRouter.post("/checkGoogleLoginDriver", loginController_1.default.checkGoogleLoginDriver);
+driverRouter.post("/registerDriver", registerController_1.default.register);
 driverRouter.post("/checkDriver", registerController_1.default.checkDriver);
 driverRouter.post("/location", registerController_1.default.location);
 driverRouter.post("/identification", multer_1.default.fields([

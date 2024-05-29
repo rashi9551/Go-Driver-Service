@@ -5,8 +5,11 @@ import upload from "../../middleware/multer";
 
 const driverRouter = Router();
 
-driverRouter.post("/registerDriver", registerController.register);
 driverRouter.post("/checkLoginDriver", loginController.checkLogin);
+driverRouter.post("/checkGoogleLoginDriver", loginController.checkGoogleLoginDriver);
+
+
+driverRouter.post("/registerDriver", registerController.register);
 driverRouter.post("/checkDriver", registerController.checkDriver);
 driverRouter.post("/location", registerController.location);
 driverRouter.post(

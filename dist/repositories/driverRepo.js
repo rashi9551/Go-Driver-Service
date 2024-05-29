@@ -39,6 +39,15 @@ exports.default = {
             return error.message;
         }
     }),
+    findDriverEmail: (email) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const driverData = yield driver_1.default.findOne({ email: email });
+            return driverData;
+        }
+        catch (error) {
+            return error.message;
+        }
+    }),
     updateIdentification: (driverData) => __awaiter(void 0, void 0, void 0, function* () {
         const { driverId, aadharID, licenseID, aadharImageUrl, licenseImageUrl } = driverData;
         const response = yield driver_1.default.findByIdAndUpdate(driverId, {

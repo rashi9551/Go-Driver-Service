@@ -70,6 +70,15 @@ export default{
 
         }
     },
+    findDriverEmail:async (email:string)=>{
+        try {
+            const driverData=await driver.findOne({email:email}) 
+            return driverData
+        } catch (error) {
+            return (error as Error).message;
+
+        }
+    },
     updateIdentification:async(driverData:Identification)=>{
         const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData 
         const response=await driver.findByIdAndUpdate(

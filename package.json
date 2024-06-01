@@ -13,6 +13,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.577.0",
     "@aws-sdk/s3-request-presigner": "^3.577.0",
+    "@types/amqplib": "^0.10.5",
+    "amqplib": "^0.10.4",
     "aws-sdk": "^2.1621.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

@@ -58,7 +58,7 @@ export default {
     },
     updateDriverImage:async(req:Request,res:Response)=>{
         const driverId:string=req.query.driverId as string
-
+        
         try {
             if(driverId && req.file)
                 {

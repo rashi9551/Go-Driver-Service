@@ -92,6 +92,10 @@ const setUpSocketIO = (server) => {
             const routingKey = "rideData.create";
             yield connectToRabbitMq();
             yield channel.publish(exchangeName, routingKey, Buffer.from(JSON.stringify({ acceptedRideData })));
+            yield driver_1.default.findByIdAndUpdate(acceptedRideData.driver_id, {
+                isAvailable: false
+            });
+            io.emit("driverConfirmation", acceptedRideData.ride_id);
         }));
     });
 };

@@ -19,8 +19,8 @@ interface identification {
     driverId: mongodb.ObjectId;
     aadharID: string;
     licenseID: string;
-    aadharFile: Express.Multer.File;
-    licenseFile: Express.Multer.File;
+    licenseImageUrl: string;
+    aadharImageUrl: string;
 }
 
 interface Identification {
@@ -33,7 +33,7 @@ interface Identification {
 
 interface driverImage{
     driverId:mongodb.ObjectId,
-    file:Express.Multer.File
+    driverImageUrl:string
 }
 interface vehicleDatas{
     registerationID:string,
@@ -92,11 +92,8 @@ export default{
         }
     },
     identification_update:async(driverData:identification)=>{
-        const {driverId,aadharID,licenseID,aadharFile,licenseFile}=driverData
-        try {
-            const aadharImageUrl=await uploadToS3(aadharFile)
-            const licenseImageUrl=await uploadToS3(licenseFile)
-            
+        const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData
+        try {            
             const newDriverData:Identification={
                 driverId:driverId,
                 aadharID,
@@ -117,11 +114,11 @@ export default{
     },
     driverImage_update:async(driverData:driverImage)=>{
         try {
-            const {driverId,file}=driverData
-            const imageUrl= await uploadToS3(file)
+            const {driverId,driverImageUrl}=driverData
+            
             const newDriverData={
                 driverId,
-                imageUrl
+                imageUrl:driverImageUrl
             }
             const response = await driverRepo.updateDriverImage(newDriverData)
             if(response?.email){

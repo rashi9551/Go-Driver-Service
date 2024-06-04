@@ -1,41 +1,39 @@
 import moment from "moment";
-import driver from "../../entities/driver";
+import driver from "../entities/driver";
 import { Request,Response } from "express";
-import { sendMail } from "../../services/nodeMailer";
+import { sendMail } from "../services/nodeMailer";
 export default {
-    pendingDrivers:async(req:Request,res:Response)=>{
+    pendingDrivers:async()=>{
         try {
-            
-            console.log("it coming");
             const response=await driver.find({account_status:"Pending"})
-            res.json(response)
+            return(response)
         } catch (error) {
            console.log(error);
-            
+            return(error)
         }
         
     },
-    verifiedDrivers:async(req:Request,res:Response)=>{
+    verifiedDrivers:async()=>{
         try {
             const response=await driver.find({account_status:{ $nin: ["Pending", "Rejected", "Blocked"] } })
-            res.json(response)
+            return(response)
         } catch (error) {
             console.log(error);
-            
+            return(error)
         }
     },
-    blockedDrivers:async(req:Request,res:Response)=>{
+    blockedDrivers:async()=>{
         try {
             const response=await driver.find({account_status:"Blocked"})
-            res.json(response)
+            return(response)
         } catch (error) {
             console.log(error);
-            
+            return(error)
         }
     },
-    driverData:async(req:Request,res:Response)=>{
+    driverData:async(data:any)=>{
         try {
-            const {id}=req.query
+            const {id}=data
             const response=await  driver.findById(id)
             if(response){
                 const formattedRideDate = {...response?.toObject()}
@@ -45,15 +43,16 @@ export default {
                     }))
                     const newData ={...formattedRideDate,formattedFeedbacks}
                     console.log(newData);
-                    res.json(newData);
+                    return(newData);
                 }
         } catch (error) {
             console.log(error);
+            return(error)
         }
     },
-    verifiedUser: async(req:Request,res:Response) =>{
+    verifyDriver: async(data:any) =>{
         try {
-            const {id}=req.query
+            const {id}=data
             const response=await  driver.findByIdAndUpdate(
                 id,
                 {
@@ -77,23 +76,22 @@ export default {
 
                 try {
                     await sendMail(response.email,subject,text)
-                    res.json({message:"Success"})
+                    return({message:"Success"})
                 } catch (error) {
                     console.log(error);
-                    res.json((error as Error).message);
+                    return((error as Error).message);
                 }
             }else{
-                res.json("Somthing error");
+                return("Somthing error");
             }
         } catch (error) {
             console.log(error);
-            res.json((error as Error).message);
+            return((error as Error).message);
         }
     },
-    rejectDriver: async(req:Request,res:Response)=>{
+    rejectDriver: async(data:any)=>{
         try {
-            const {id}=req.query
-            const reason =req.body.reason
+            const {id,reason}=data
             const response=await  driver.findByIdAndUpdate(
                 id,
                 {
@@ -122,24 +120,23 @@ export default {
 
                 try {
                     await sendMail(response.email,subject,text)
-                    res.json({message:"Success"})
+                    return({message:"Success"})
                 } catch (error) {
                     console.log(error);
-                    res.json((error as Error).message);
+                    return((error as Error).message);
                 }
             }else{
-                res.json("Somthing error");
+                return("Somthing error");
             }
         } catch (error) {
             console.log(error);
-            res.json((error as Error).message);
+            return((error as Error).message);
         }
     },
-    updateDriverStatus:async(req:Request,res:Response)=>{
+    updateDriverStatus:async(data:any)=>{
         try {
             let newStatus;
-            const {id}=req.query
-            const {reason,status}=req.body
+            const {reason,status,id}=data
             if(status=="Block")newStatus="Blocked"
             else newStatus=status
             
@@ -170,16 +167,16 @@ export default {
 
                 try {
                     await sendMail(response.email, subject, text);
-                    res.json({ message: "Success" });
+                    return({ message: "Success" });
                 } catch (error) {
                     console.log(error);
-                    res.json((error as Error).message);
+                    return((error as Error).message);
                 }
             } else {
-                res.json("Somthing error");
+                return("Somthing error");
             }
         } catch (error) {
-            res.json(error);
+            return(error);
         }
     }
 

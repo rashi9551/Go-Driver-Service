@@ -102,10 +102,10 @@ export const setUpSocketIO = (server: HttpServer): void => {
       const routingKey="rideData.create"
       await connectToRabbitMq()
       await channel.publish(exchangeName,routingKey,Buffer.from(JSON.stringify({acceptedRideData})))
-      
-      
-
-
+      await driver.findByIdAndUpdate(acceptedRideData.driver_id,{
+        isAvailable:false
+      })
+      io.emit("driverConfirmation",acceptedRideData.ride_id)
     })
   });
 };

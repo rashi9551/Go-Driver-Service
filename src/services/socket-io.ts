@@ -1,19 +1,10 @@
 import { Server as HttpServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import driver, { RideDetails } from "../entities/driver";
-import amqp from 'amqplib'
 import {generatePIN} from '../utilities/generatePIN'
+import rideRabbitMqClient from './rabbitmq/client'
 
 
-const rabbitMqUrl='amqp://localhost:5672'
-const exchangeName="rideDetails"
-
-let connection,channel:any,userDetails
-async function connectToRabbitMq() {
-  connection=await amqp.connect(rabbitMqUrl)
-  channel=await connection.createChannel()
-  await channel.assertExchange(exchangeName, 'direct', { durable: true }); 
-}
 
 
 
@@ -41,6 +32,7 @@ const calculateDistance=(driverLatitude:number,driverLongitude:number,userLatitu
 
 
 export const setUpSocketIO = (server: HttpServer): void => {
+  
   let driverLatitude: number;
   let driverLongitude: number;
   let rideDetails: RideDetails;
@@ -50,7 +42,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       credentials: true,
     },
   });
-
+  
   io.on("connection", (socket: Socket) => {
     console.log("Client connected:", socket.id);
 
@@ -58,7 +50,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       console.log("nearby drivers edukkunu");
       
       rideDetails = rideData;
-      console.log(rideDetails);
+      console.log(rideDetails,"ride details");
       
       io.emit("getNearByDrivers");
     });
@@ -97,11 +89,10 @@ export const setUpSocketIO = (server: HttpServer): void => {
         acceptedRideData.driverCoordinates.latitude = driverLatitude;
         acceptedRideData.driverCoordinates.longitude = driverLongitude;
       }
-
       console.log(acceptedRideData,"data sended");
-      const routingKey="rideData.create"
-      await connectToRabbitMq()
-      await channel.publish(exchangeName,routingKey,Buffer.from(JSON.stringify({acceptedRideData})))
+      const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
+      console.log(response,"ithu ride response");
+      
       await driver.findByIdAndUpdate(acceptedRideData.driver_id,{
         isAvailable:false
       })

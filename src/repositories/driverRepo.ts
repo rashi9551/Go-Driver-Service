@@ -42,6 +42,13 @@ interface locationData{
     longitude:number
 }
 
+interface driverData{
+    name:string,
+    email:string,
+    mobile:number,
+    driver_id:string
+}
+
 
 
 export default{
@@ -70,10 +77,19 @@ export default{
 
         }
     },
+    getDriverData:async (driver_id:string)=>{
+        try {
+            const driverData=await driver.findOne({_id:driver_id}) 
+            return driverData
+        } catch (error) {
+            return (error as Error).message;
+
+        }
+    },
     findDriverEmail:async (email:string)=>{
         try {
             const driverData=await driver.findOne({email:email}) 
-            return driverData
+            return (driverData)
         } catch (error) {
             return (error as Error).message;
 
@@ -169,5 +185,50 @@ export default{
             }
         )
         return response
-    }
+    },
+    profileUpdate:async(data:driverData)=>{
+        const {name,email,mobile,driver_id}=data
+        const updateFields: { name?: string; email?: string; mobile?: number } = {};
+        if (name) {
+            updateFields.name = name;
+        }
+
+        if (email) {
+            updateFields.email = email;
+        }
+
+        if (mobile) {
+            updateFields.mobile = mobile;
+        }
+        const response=await driver.findByIdAndUpdate(
+            driver_id,
+            {
+                $set:updateFields
+            },
+            {
+                new:true
+            }
+        )
+        return response
+    },
+    updateStatus:async (driver_id:string)=>{
+        try {
+            const data = await driver.findById(driver_id);
+            const driverData=await driver.findByIdAndUpdate(
+                driver_id,
+                {
+                    $set: {
+                        isAvailable: !data?.isAvailable,
+                    },
+                },
+                {
+                    new: true,
+                }
+            ) 
+            return (driverData)
+        } catch (error) {
+            return (error as Error).message;
+
+        }
+    },
 }

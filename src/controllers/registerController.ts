@@ -1,4 +1,3 @@
-import { Request,Response,NextFunction } from "express";
 import registration from "../useCases/registration";
 import { ObjectId } from "mongodb";
 
@@ -10,7 +9,8 @@ export default {
             email,
             mobile,
             password,
-            reffered_code
+            reffered_code,
+            joiningDate:Date.now()
         }
         try {
             const response=await registration.register(userData)

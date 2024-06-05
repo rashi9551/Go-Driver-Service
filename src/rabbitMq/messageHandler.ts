@@ -1,8 +1,10 @@
 import registerController from "../controllers/registerController";
 import loginController from "../controllers/loginController";
 import adminController from "../controllers/adminController";
+import driverControl from "../controllers/driverController";
 import rabbitClient from "./client";
 
+const driverController=new driverControl()
 
 
 
@@ -48,6 +50,18 @@ export default class MessageHandler {
 
       case "vehicle-image-update":
         response=await registerController.vehicleUpdate(data)
+        break;
+
+      case "driver-getData":
+        response=await driverController.getData(data)
+        break;
+
+      case "profile-update":
+        response=await driverController.profileUpdate(data)
+        break;
+
+      case "update-status":
+        response=await driverController.updateStatus(data)
         break;
 
       case "admin-pending-drivers":

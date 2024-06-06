@@ -1,8 +1,8 @@
 import registration from "../useCases/registration";
 import { ObjectId } from "mongodb";
 
-export default {
-    register:async(data:any)=>{        
+export default class registerController{
+    register=async(data:any)=>{        
         const {name ,email,mobile ,password ,reffered_code}=data
         const userData={
             name,
@@ -18,8 +18,8 @@ export default {
         } catch (error) {
             return({ error: (error as Error).message });
         }
-    },
-    checkDriver:async(data:any)=>{
+    }
+    checkDriver=async(data:any)=>{
         const {mobile}=data
         try {
             const response=await registration.checkDriver(mobile)
@@ -29,8 +29,8 @@ export default {
             
         }
         
-    },
-    identificationUpdate:async(data:any)=>{
+    }
+    identificationUpdate=async(data:any)=>{
         const {aadharID,licenseID,driverId,aadharImageUrl,licenseImageUrl}=data
         console.log(licenseImageUrl)
         try {
@@ -52,8 +52,8 @@ export default {
         } catch (error) {
             return({ error: (error as Error).message });
         }
-    },
-    updateDriverImage:async(data:any)=>{
+    }
+    updateDriverImage=async(data:any)=>{
         const {driverId,url}=data
         console.log(url,"ithu files");
         try {
@@ -72,8 +72,8 @@ export default {
         } catch (error) {
             return((error as Error).message);
         }
-    },
-    vehicleUpdate:async(data:any)=>{
+    }
+    vehicleUpdate=async(data:any)=>{
         try {
             const {registerationID,model,driverId,rcImageUrl,carImageUrl}=data
             const vehicleData={
@@ -90,8 +90,8 @@ export default {
             return((error as Error).message);
             
         }
-    },
-    location:async(data:any)=>{
+    }
+    location=async(data:any)=>{
         const {latitude,longitude,driverId}=data
         try {
             if(driverId)

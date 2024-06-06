@@ -1,12 +1,13 @@
-import registerController from "../controllers/registerController";
-import loginController from "../controllers/loginController";
-import adminController from "../controllers/adminController";
+import registerControl from "../controllers/registerController";
+import loginControl from "../controllers/loginController";
+import adminControl from "../controllers/adminController";
 import driverControl from "../controllers/driverController";
 import rabbitClient from "./client";
 
-const driverController=new driverControl()
-
-
+const driverController= new driverControl()
+const adminController = new adminControl()
+const loginController = new loginControl()
+const registerController = new registerControl()
 
 export default class MessageHandler {
   static async handle(

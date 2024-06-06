@@ -2,8 +2,8 @@ import moment from "moment";
 import driver from "../entities/driver";
 import { Request,Response } from "express";
 import { sendMail } from "../services/nodeMailer";
-export default {
-    pendingDrivers:async()=>{
+export default class adminController {
+    pendingDrivers=async()=>{
         try {
             const response=await driver.find({account_status:"Pending"})
             return(response)
@@ -12,8 +12,8 @@ export default {
             return(error)
         }
         
-    },
-    verifiedDrivers:async()=>{
+    }
+    verifiedDrivers=async()=>{
         try {
             const response=await driver.find({account_status:{ $nin: ["Pending", "Rejected", "Blocked"] } })
             return(response)
@@ -21,8 +21,8 @@ export default {
             console.log(error);
             return(error)
         }
-    },
-    blockedDrivers:async()=>{
+    }
+    blockedDrivers=async()=>{
         try {
             const response=await driver.find({account_status:"Blocked"})
             return(response)
@@ -30,8 +30,8 @@ export default {
             console.log(error);
             return(error)
         }
-    },
-    driverData:async(data:any)=>{
+    }
+    driverData=async(data:any)=>{
         try {
             const {id}=data
             const response=await  driver.findById(id)
@@ -49,8 +49,8 @@ export default {
             console.log(error);
             return(error)
         }
-    },
-    verifyDriver: async(data:any) =>{
+    }
+    verifyDriver= async(data:any) =>{
         try {
             const {id}=data
             const response=await  driver.findByIdAndUpdate(
@@ -88,8 +88,8 @@ export default {
             console.log(error);
             return((error as Error).message);
         }
-    },
-    rejectDriver: async(data:any)=>{
+    }
+    rejectDriver= async(data:any)=>{
         try {
             const {id,reason}=data
             const response=await  driver.findByIdAndUpdate(
@@ -132,8 +132,8 @@ export default {
             console.log(error);
             return((error as Error).message);
         }
-    },
-    updateDriverStatus:async(data:any)=>{
+    }
+    updateDriverStatus=async(data:any)=>{
         try {
             let newStatus;
             const {reason,status,id}=data

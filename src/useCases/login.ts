@@ -1,7 +1,8 @@
-import driverRepo from "../repositories/driverRepo";
+import driverReposiory from "../repositories/driverRepo";
 import auth from "../middleware/auth";
 import { DriverInterface } from "../entities/driver";
 
+const driverRepo=new driverReposiory()
 
 
 export default{

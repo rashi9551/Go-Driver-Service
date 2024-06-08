@@ -51,8 +51,8 @@ interface driverData{
 
 
 
-export default{
-    saveDriver:async(DriverData:Registration)=>{
+export default class driverRepository{
+    saveDriver=async(DriverData:Registration)=>{
         try {
             const newDriver=new driver({
                 name:DriverData.name,
@@ -67,8 +67,8 @@ export default{
             return (error as Error).message;
 
         }
-    },
-    findDriver:async (mobile:number)=>{
+    }
+    findDriver=async (mobile:number)=>{
         try {
             const driverData=await driver.findOne({mobile:mobile}) 
             return driverData
@@ -76,8 +76,8 @@ export default{
             return (error as Error).message;
 
         }
-    },
-    getDriverData:async (driver_id:string)=>{
+    }
+    getDriverData=async (driver_id:string)=>{
         try {
             const driverData=await driver.findOne({_id:driver_id}) 
             return driverData
@@ -85,8 +85,8 @@ export default{
             return (error as Error).message;
 
         }
-    },
-    findDriverEmail:async (email:string)=>{
+    }
+    findDriverEmail=async (email:string)=>{
         try {
             const driverData=await driver.findOne({email:email}) 
             return (driverData)
@@ -94,8 +94,8 @@ export default{
             return (error as Error).message;
 
         }
-    },
-    updateIdentification:async(driverData:Identification)=>{
+    }
+    updateIdentification=async(driverData:Identification)=>{
         const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData 
         const response=await driver.findByIdAndUpdate(
             driverId,
@@ -117,8 +117,8 @@ export default{
         );
         return response;
 
-    },
-    updateDriverImage:async(driverData : driverImage)=>{
+    }
+    updateDriverImage=async(driverData : driverImage)=>{
         try {
             const {driverId,imageUrl}=driverData
             const response = await driver.findByIdAndUpdate(
@@ -136,8 +136,8 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message);
         }
-    },
-    vehicleUpdate:async(vehicleData:vehicleDatas)=>{
+    }
+    vehicleUpdate=async(vehicleData:vehicleDatas)=>{
         try {
             const {registerationID,
                 model,
@@ -165,8 +165,8 @@ export default{
             throw new Error((error as Error).message);
 
         }
-    },
-    locationUpdate:async(data:locationData)=>{
+    }
+    locationUpdate=async(data:locationData)=>{
         const {driverId,longitude,latitude}=data
         const response=await driver.findByIdAndUpdate(
             driverId,
@@ -185,8 +185,8 @@ export default{
             }
         )
         return response
-    },
-    profileUpdate:async(data:driverData)=>{
+    }
+    profileUpdate=async(data:driverData)=>{
         const {name,email,mobile,driver_id}=data
         const updateFields: { name?: string; email?: string; mobile?: number } = {};
         if (name) {
@@ -210,8 +210,8 @@ export default{
             }
         )
         return response
-    },
-    updateStatus:async (driver_id:string)=>{
+    }
+    updateStatus=async (driver_id:string)=>{
         try {
             const data = await driver.findById(driver_id);
             const driverData=await driver.findByIdAndUpdate(
@@ -224,11 +224,11 @@ export default{
                 {
                     new: true,
                 }
-            ) 
+            )             
             return (driverData)
         } catch (error) {
             return (error as Error).message;
 
         }
-    },
+    }
 }

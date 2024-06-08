@@ -1,11 +1,11 @@
-import { register } from "module";
 import { refferalCode } from "../utilities/referralCode";
 import bcrypt from "../services/bcrypt";
-import driverRepo from "../repositories/driverRepo";
+import driverRepository from "../repositories/driverRepo";
 import { DriverInterface } from "../entities/driver";
 // import { ObjectId } from "mongoose";
 import mongodb from "mongodb";
-import uploadToS3 from "../services/awsS3"; 
+
+const driverRepo=new driverRepository()
 
 interface DriverData{
     name:string,

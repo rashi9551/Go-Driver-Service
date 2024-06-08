@@ -3,9 +3,9 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import driver, { RideDetails } from "../entities/driver";
 import {generatePIN} from '../utilities/generatePIN'
 import rideRabbitMqClient from './rabbitmq/client'
+import driverRepository from "../repositories/driverRepo";
 
-
-
+const driverRepo=new driverRepository()
 
 
 
@@ -85,18 +85,20 @@ export const setUpSocketIO = (server: HttpServer): void => {
     socket.on("acceptRide",async(acceptedRideData:RideDetails)=>{
       acceptedRideData.status="Pending";
       acceptedRideData.pin=generatePIN()
-      if (acceptedRideData && acceptedRideData.driverCoordinates) {
-        acceptedRideData.driverCoordinates.latitude = driverLatitude;
-        acceptedRideData.driverCoordinates.longitude = driverLongitude;
-      }
+      
+      acceptedRideData.driverCoordinates = {};
+      acceptedRideData.driverCoordinates.latitude = driverLatitude;
+      acceptedRideData.driverCoordinates.longitude = driverLongitude;
+      
       console.log(acceptedRideData,"data sended");
       const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
       console.log(response,"ithu ride response");
-      
-      await driver.findByIdAndUpdate(acceptedRideData.driver_id,{
-        isAvailable:false
-      })
+      // await driverRepo.updateStatus(acceptedRideData.driver_id)
       io.emit("driverConfirmation",acceptedRideData.ride_id)
+    })
+
+    socket.on('forUser',async(ride_id:any)=>{
+      io.emit("userConfirmation",ride_id)
     })
   });
 };

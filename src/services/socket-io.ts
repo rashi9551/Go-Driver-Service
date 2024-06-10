@@ -92,13 +92,32 @@ export const setUpSocketIO = (server: HttpServer): void => {
       
       console.log(acceptedRideData,"data sended");
       const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
-      console.log(response,"ithu ride response");
       // await driverRepo.updateStatus(acceptedRideData.driver_id)
+      console.log(response,"ithu ride response");
       io.emit("driverConfirmation",acceptedRideData.ride_id)
     })
 
     socket.on('forUser',async(ride_id:any)=>{
       io.emit("userConfirmation",ride_id)
+    })
+
+    socket.on("rideCancelled", async (ride_id)=>{
+      try {
+        console.log("ride called triggered");  
+        const response = await rideRabbitMqClient.produce(ride_id,"update-ride-status")
+        console.log(response,"ride data updated");
+        
+        // await driverRepo.updateStatus(response.driver_id)
+          // await user.findByIdAndUpdate(rideData?.user_id,{
+          //     $inc: {
+          //         "RideDetails.cancelledRides": 1,
+          //     },
+          // })
+
+          io.emit("rideCancelled")
+      } catch (error) {
+          console.log((error as Error).message);
+      }
     })
   });
 };

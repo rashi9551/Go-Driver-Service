@@ -8,7 +8,6 @@ export default class driverControl{
         const {driver_id}=data
         const driverData=await registration.getDriverData(driver_id) as DriverInterface
         if (driverData?.name) {
-            console.log(driverData);
             
             const formattedDate = moment(driverData?.joiningDate).format("dddd, DD-MM-YYYY");
             const formattedDriverData = { ...driverData?.toObject(), formattedDate };
@@ -26,7 +25,6 @@ export default class driverControl{
 
     profileUpdate=async(data:any)=>{
         const driverDatas=await registration.profileUpdate(data) as DriverInterface
-        console.log(driverDatas);
         if (driverDatas?.name) {
             const formattedDate = moment(driverDatas?.joiningDate).format("dddd, DD-MM-YYYY");
             const formattedDriverData = { ...driverDatas?.toObject(), formattedDate };

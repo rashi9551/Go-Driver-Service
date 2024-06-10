@@ -12,7 +12,6 @@ export default {
     verifyToken:async(req:Request,res:Response,next:NextFunction)=>{
         try {
             const token = req.headers.authorization?.trim().split(" ")[1];
-               console.log(token);
                 
         if (!token) {
             res.status(401).json({ message: "Unauthorized" });

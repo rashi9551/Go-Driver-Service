@@ -32,7 +32,6 @@ export default class registerController{
     }
     identificationUpdate=async(data:any)=>{
         const {aadharID,licenseID,driverId,aadharImageUrl,licenseImageUrl}=data
-        console.log(licenseImageUrl)
         try {
             if(driverId){
                 const driverData={
@@ -43,7 +42,6 @@ export default class registerController{
                     licenseImageUrl:licenseImageUrl
                 }
                 const response=await registration.identification_update(driverData)
-                console.log(response,"responseyy");
                 return(response)     
                 
             }else{
@@ -55,7 +53,6 @@ export default class registerController{
     }
     updateDriverImage=async(data:any)=>{
         const {driverId,url}=data
-        console.log(url,"ithu files");
         try {
             if(driverId && url)
                 {

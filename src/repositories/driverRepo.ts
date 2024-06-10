@@ -158,7 +158,6 @@ export default class driverRepository{
                     new:true
                 }
             )
-            console.log(response);
             
             return response
         } catch (error) {

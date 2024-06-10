@@ -9,7 +9,6 @@ export default{
     loginCheckDriver: async (mobile: number) => {
         const response = await driverRepo.findDriver(mobile) as DriverInterface
         if (response) {
-            console.log(response)
             if (                
                 response.account_status !== "Pending" &&
                 response.account_status !== "Rejected" &&
@@ -31,7 +30,6 @@ export default{
     checkGoogleLoginDriver: async (email: string) => {
         const response = await driverRepo.findDriverEmail(email) as DriverInterface
         if (response) {
-            console.log(response)
             if (                
                 response.account_status !== "Pending" &&
                 response.account_status !== "Rejected" &&

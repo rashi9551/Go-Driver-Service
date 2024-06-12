@@ -36,8 +36,13 @@ class RabbitMqClient{
         }
         try{
             this.connection=await connect(rabbitmqConfig.rabbitMQ.url);
-            this.produceChannel=await this.connection.createChannel()
-            this.consumerChannel=await this.connection.createChannel()
+            const [produceChannel, consumerChannel] = await Promise.all([
+                this.connection.createChannel(),
+                this.connection.createChannel()
+            ]);
+        
+            this.produceChannel = produceChannel;
+            this.consumerChannel = consumerChannel;
 
             const {queue:replyQueueName} = await this.consumerChannel.assertQueue("",{exclusive:true})
             this.eventEmitter=new EventEmitter()

@@ -58,8 +58,8 @@ interface locationData{
 
 
 
-export default{
-    register:async(DriverData:DriverData)=>{
+export default class registrationUseCase{
+    register=async(DriverData:DriverData)=>{
         try {
     
             const {name ,email,mobile ,password ,reffered_code}=DriverData
@@ -74,14 +74,13 @@ export default{
             }
             const response=await driverRepo.saveDriver(newDriver)
             if(typeof response !== "string" && response.email){
-                // const token = await auth.createToken(response._id.toString());
                 return {message: "Success",driverId:response._id};
             }
         } catch (error) {
             
         }
-    },
-    checkDriver:async(mobile:number)=>{
+    }
+    checkDriver = async(mobile:number)=>{
         try {
             const response = await driverRepo.findDriver(mobile) as DriverInterface
             if (response) {
@@ -97,8 +96,8 @@ export default{
         } catch (error) {
             return { message: (error as Error).message };
         }
-    },
-    identification_update:async(driverData:identification)=>{
+    }
+    identification_update = async(driverData:identification)=>{
         const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData
         try {            
             const newDriverData:Identification={
@@ -118,8 +117,8 @@ export default{
             return { message: (error as Error).message };
 
         }
-    },
-    driverImage_update:async(driverData:driverImage)=>{
+    }
+    driverImage_update = async(driverData:driverImage)=>{
         try {
             const {driverId,driverImageUrl}=driverData
             
@@ -136,8 +135,8 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message)
         }
-    },
-    vehicleUpdate:async(vehicleData :vehicleDatas )=>{
+    }
+    vehicleUpdate = async(vehicleData :vehicleDatas )=>{
         try {
             const response=await driverRepo.vehicleUpdate(vehicleData)
 
@@ -152,8 +151,8 @@ export default{
 
         }
 
-    },
-    location_update:async(data:locationData)=>{
+    }
+    location_update = async(data:locationData)=>{
         try {
             
             const response=await driverRepo.locationUpdate(data)
@@ -165,8 +164,8 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message)
         }
-    },
-    getDriverData:async(driver_id:string)=>{
+    }
+    getDriverData = async(driver_id:string)=>{
         try {
             const response=await driverRepo.getDriverData(driver_id)
             if(response!=undefined){
@@ -177,8 +176,8 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message)
         }
-    },
-    profileUpdate:async(driverData:driverData)=>{
+    }
+    profileUpdate = async(driverData:driverData)=>{
         try {
             const response=await driverRepo.profileUpdate(driverData)
             if(response!=undefined){
@@ -189,8 +188,8 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message)
         }
-    },
-    updateStatus:async(driver_id:string)=>{
+    }
+    updateStatus = async(driver_id:string)=>{
         try {
             const driverData=await driverRepo.updateStatus(driver_id)
             if(driverData!=undefined){
@@ -201,6 +200,6 @@ export default{
         } catch (error) {
             throw new Error((error as Error).message)
         }
-    },
+    }
 
 }

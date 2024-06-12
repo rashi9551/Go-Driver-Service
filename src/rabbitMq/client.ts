@@ -28,8 +28,13 @@ class RabbitMQClient {
         try {
             this.connection = await connect(rabbitMq.rabbitMQ.url);
       
-            this.producerChannel = await this.connection.createChannel();
-            this.consumerChannel = await this.connection.createChannel();
+            const [producerChannel, consumerChannel] = await Promise.all([
+              this.connection.createChannel(),
+              this.connection.createChannel()
+            ]);
+      
+            this.producerChannel = producerChannel;
+            this.consumerChannel = consumerChannel;
       
             const { queue: rpcQueue } = await this.consumerChannel.assertQueue(
               rabbitMq.queues.driverQueue,

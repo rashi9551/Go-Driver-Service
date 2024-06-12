@@ -5,8 +5,8 @@ import { DriverInterface } from "../entities/driver";
 const driverRepo=new driverReposiory()
 
 
-export default{
-    loginCheckDriver: async (mobile: number) => {
+export default class loginUseCase{
+    loginCheckDriver= async (mobile: number) => {
         const response = await driverRepo.findDriver(mobile) as DriverInterface
         if (response) {
             if (                
@@ -26,8 +26,8 @@ export default{
                 return { message: "Not verified" };
             }
         } else return { message: "No user found" };
-    },
-    checkGoogleLoginDriver: async (email: string) => {
+    }
+    checkGoogleLoginDriver= async (email: string) => {
         const response = await driverRepo.findDriverEmail(email) as DriverInterface
         if (response) {
             if (                
@@ -47,6 +47,6 @@ export default{
                 return { message: "Not verified" };
             }
         } else return { message: "No user found" };
-    },
+    }
 
 }

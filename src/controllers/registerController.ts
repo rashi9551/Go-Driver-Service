@@ -1,5 +1,7 @@
-import registration from "../useCases/registration";
+import registrationUseCases from "../useCases/registration";
 import { ObjectId } from "mongodb";
+
+const registrationUseCase= new registrationUseCases()
 
 export default class registerController{
     register=async(data:any)=>{        
@@ -13,7 +15,7 @@ export default class registerController{
             joiningDate:Date.now()
         }
         try {
-            const response=await registration.register(userData)
+            const response=await registrationUseCase.register(userData)
             return (response)
         } catch (error) {
             return({ error: (error as Error).message });
@@ -22,7 +24,7 @@ export default class registerController{
     checkDriver=async(data:any)=>{
         const {mobile}=data
         try {
-            const response=await registration.checkDriver(mobile)
+            const response=await registrationUseCase.checkDriver(mobile)
             return(response)
         } catch (error) {
             return({ error: (error as Error).message });
@@ -41,7 +43,7 @@ export default class registerController{
                     aadharImageUrl:aadharImageUrl,
                     licenseImageUrl:licenseImageUrl
                 }
-                const response=await registration.identification_update(driverData)
+                const response=await registrationUseCase.identification_update(driverData)
                 return(response)     
                 
             }else{
@@ -60,7 +62,7 @@ export default class registerController{
                         driverId:new ObjectId(driverId),
                         driverImageUrl:url
                     };
-                    const response= await registration.driverImage_update(driverData)
+                    const response= await registrationUseCase.driverImage_update(driverData)
                     return(response)
 
                 }else{
@@ -81,7 +83,7 @@ export default class registerController{
                 carImageUrl
             }
 
-            const response= await registration.vehicleUpdate(vehicleData)
+            const response= await registrationUseCase.vehicleUpdate(vehicleData)
              return(response)
         } catch (error) {
             return((error as Error).message);
@@ -99,7 +101,7 @@ export default class registerController{
                         longitude
 
                     }
-                    const response=await registration.location_update(locationData)
+                    const response=await registrationUseCase.location_update(locationData)
                     return(response)
                 }
         } catch (error) {

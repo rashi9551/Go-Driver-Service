@@ -1,12 +1,14 @@
 import { Request,Response,NextFunction } from "express";
-import login from "../useCases/login";
+import ioginUseCases from "../useCases/login";
+import loginUseCases from "../useCases/login";
 
+const loginUseCase=new loginUseCases()
 export default class loginController{
     checkLogin=async(data:any)=>{
         try {
             
             const {mobile}=data
-            const response=await login.loginCheckDriver(mobile)
+            const response=await loginUseCase.loginCheckDriver(mobile)
             return(response)
         } catch (error) {
             return({ error: (error as Error).message });
@@ -17,7 +19,7 @@ export default class loginController{
         try {
             
             const {email}=data
-            const response=await login.checkGoogleLoginDriver(email)
+            const response=await loginUseCase.checkGoogleLoginDriver(email)
             return(response)
         } catch (error) {
             return({ error: (error as Error).message });

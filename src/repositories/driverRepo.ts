@@ -59,7 +59,8 @@ export default class driverRepository{
                 email:DriverData.email,
                 mobile:DriverData.mobile,
                 password:DriverData.password,
-                referral_code:DriverData.referral_code
+                referral_code:DriverData.referral_code,
+                joiningDate:Date.now()
             })
             const saveDriver=await newDriver.save()
             return saveDriver

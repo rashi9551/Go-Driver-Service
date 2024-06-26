@@ -101,6 +101,20 @@ export const setUpSocketIO = (server: HttpServer): void => {
       io.emit("userConfirmation",ride_id)
     })
 
+    socket.on("verifyRide", async (pin: number) => {
+      console.log("pin check",pin);
+      const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
+      if(response){
+          io.emit("rideConfirmed")
+      }else{
+          io.emit("error in confirming ride")
+      }
+    });
+
+    socket.on("driverRideFinish",()=>{
+      io.emit("userPaymentPage")
+    })
+
     socket.on("rideCancelled", async (ride_id)=>{
       try {
         console.log("ride called triggered");  

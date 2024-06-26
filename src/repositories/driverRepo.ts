@@ -97,26 +97,32 @@ export default class driverRepository{
         }
     }
     updateIdentification=async(driverData:Identification)=>{
-        const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData 
-        const response=await driver.findByIdAndUpdate(
-            driverId,
-            {
-                $set:{
-                    aadhar:{
-                        aadharId:aadharID,
-                        aadharImage:aadharImageUrl,
-                    },
-                    license:{
-                        licenseId:licenseID,
-                        licenseImage:licenseImageUrl,
+        try {
+            const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData 
+            const response=await driver.findByIdAndUpdate(
+                driverId,
+                {
+                    $set:{
+                        aadhar:{
+                            aadharId:aadharID,
+                            aadharImage:aadharImageUrl,
+                        },
+                        license:{
+                            licenseId:licenseID,
+                            licenseImage:licenseImageUrl,
+                        },
                     },
                 },
-            },
-            {
-                new:true
-            }
-        );
-        return response;
+                {
+                    new:true
+                }
+            );
+            return response;
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
 
     }
     updateDriverImage=async(driverData : driverImage)=>{
@@ -167,49 +173,61 @@ export default class driverRepository{
         }
     }
     locationUpdate=async(data:locationData)=>{
-        const {driverId,longitude,latitude}=data
-        const response=await driver.findByIdAndUpdate(
-            driverId,
-            {
-                $set:{
-                    location:{
-                        latitude,
-                        longitude
-                    },
-                    identification:true,
-                    account_status:"Pending"
+        try {
+            const {driverId,longitude,latitude}=data
+            const response=await driver.findByIdAndUpdate(
+                driverId,
+                {
+                    $set:{
+                        location:{
+                            latitude,
+                            longitude
+                        },
+                        identification:true,
+                        account_status:"Pending"
+                    }
+                },
+                {
+                    new:true
                 }
-            },
-            {
-                new:true
-            }
-        )
-        return response
+            )
+            return response
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
     profileUpdate=async(data:driverData)=>{
-        const {name,email,mobile,driver_id}=data
-        const updateFields: { name?: string; email?: string; mobile?: number } = {};
-        if (name) {
-            updateFields.name = name;
-        }
-
-        if (email) {
-            updateFields.email = email;
-        }
-
-        if (mobile) {
-            updateFields.mobile = mobile;
-        }
-        const response=await driver.findByIdAndUpdate(
-            driver_id,
-            {
-                $set:updateFields
-            },
-            {
-                new:true
+        try {
+            const {name,email,mobile,driver_id}=data
+            const updateFields: { name?: string; email?: string; mobile?: number } = {};
+            if (name) {
+                updateFields.name = name;
             }
-        )
-        return response
+    
+            if (email) {
+                updateFields.email = email;
+            }
+    
+            if (mobile) {
+                updateFields.mobile = mobile;
+            }
+            const response=await driver.findByIdAndUpdate(
+                driver_id,
+                {
+                    $set:updateFields
+                },
+                {
+                    new:true
+                }
+            )
+            return response
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
     updateStatus=async (driver_id:string)=>{
         try {

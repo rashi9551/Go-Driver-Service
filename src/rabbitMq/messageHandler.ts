@@ -25,6 +25,8 @@ export default class MessageHandler {
         break;
 
       case "google-login":
+        console.log("vernnindu data",data);
+        
         response=await loginController.checkGoogleLoginDriver(data)
         break;
 

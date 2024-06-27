@@ -249,4 +249,15 @@ export default class driverRepository{
 
         }
     }
+    findNearDrivers=async(vehicleModel:string)=>{
+        try {
+            const driverIds=await driver.find({"vehicle_details.model": vehicleModel , account_status:{$in:["Good","Warning"]},isAvailable:true})
+                .select("_id")
+                .exec();
+                return driverIds
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 }

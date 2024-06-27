@@ -2,13 +2,14 @@ import registerControl from "../controllers/registerController";
 import loginControl from "../controllers/loginController";
 import adminControl from "../controllers/adminController";
 import driverControl from "../controllers/driverController";
+import socketControl from "../controllers/socketController";
 import rabbitClient from "./client";
 
 const driverController= new driverControl()
 const adminController = new adminControl()
 const loginController = new loginControl()
 const registerController = new registerControl()
-
+const socketController=new socketControl()
 export default class MessageHandler {
   static async handle(
     operation: string,
@@ -93,6 +94,14 @@ export default class MessageHandler {
 
       case "admin-update-status-driver":
         response=await adminController.updateDriverStatus(data)
+        break;
+
+      case "findNearbyDrivers":
+        response=await socketController.findNearbyDrivers(data)
+        break;
+
+      case "updateDriverStatus":
+        response=await socketController.updateDriverStatus(data.driverId)
         break;
 
       default:

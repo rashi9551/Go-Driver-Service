@@ -3,7 +3,6 @@ import connectDB from "./config/mongo";
 import RabbitMQClient from "./rabbitMq/client";
 import express from "express";
 import http from 'http'
-import { setUpSocketIO } from "./services/socket-io";
 
 const PORT=process.env.PORT
 class App{
@@ -17,9 +16,7 @@ class App{
         
       })
         RabbitMQClient.initialize();
-        connectDB()
-        setUpSocketIO(this.server)
-        
+        connectDB()        
     }
   
     

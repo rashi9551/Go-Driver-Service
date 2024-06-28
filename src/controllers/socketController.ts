@@ -12,7 +12,8 @@ export default class socketController{
         return drivers
        } catch (error) {
         console.log(error);
-        
+        return({ error: (error as Error).message });
+
        }
         
     }
@@ -22,7 +23,8 @@ export default class socketController{
         return drivers
        } catch (error) {
         console.log(error);
-        
+        return({ error: (error as Error).message });
+
        }
         
     }

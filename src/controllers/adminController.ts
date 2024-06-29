@@ -8,7 +8,7 @@ export default class adminController {
             const response=await driver.find({account_status:"Pending"})
             return(response)
         } catch (error) {
-           console.log(error);
+           console.log(error );
             return(error)
         }
         

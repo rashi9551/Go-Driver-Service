@@ -10,7 +10,7 @@ export const refferalCode = () => {
 
     for (let i = 0; i < 2; i++) {
         const randomIndex = Math.floor(Math.random() * digits.length);
-        randomString += digits[randomIndex];
+        randomString += digits[randomIndex]; 
     }
 
     return randomString;

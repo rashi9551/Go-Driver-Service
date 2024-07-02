@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
-import driver, { DriverInterface } from "../entities/driver";
+import Driver, { DriverInterface, RideDetails } from "../entities/driver";
+import { RidePayment } from "../utilities/interface";
 
 interface Registration {
     name: string;
@@ -54,7 +55,7 @@ interface driverData{
 export default class driverRepository{
     saveDriver=async(DriverData:Registration)=>{
         try {
-            const newDriver=new driver({
+            const newDriver=new Driver({
                 name:DriverData.name,
                 email:DriverData.email,
                 mobile:DriverData.mobile,
@@ -71,7 +72,7 @@ export default class driverRepository{
     }
     findDriver=async (mobile:number)=>{
         try {
-            const driverData=await driver.findOne({mobile:mobile}) 
+            const driverData=await Driver.findOne({mobile:mobile}) 
             return driverData
         } catch (error) {
             return (error as Error).message;
@@ -80,7 +81,7 @@ export default class driverRepository{
     }
     getDriverData=async (driver_id:string)=>{
         try {
-            const driverData=await driver.findOne({_id:driver_id}) 
+            const driverData=await Driver.findOne({_id:driver_id}) 
             return driverData
         } catch (error) {
             return (error as Error).message;
@@ -89,7 +90,7 @@ export default class driverRepository{
     }
     findDriverEmail=async (email:string)=>{
         try {
-            const driverData=await driver.findOne({email:email}) 
+            const driverData=await Driver.findOne({email:email}) 
             return (driverData)
         } catch (error) {
             return (error as Error).message;
@@ -99,7 +100,7 @@ export default class driverRepository{
     updateIdentification=async(driverData:Identification)=>{
         try {
             const {driverId,aadharID,licenseID,aadharImageUrl,licenseImageUrl}=driverData 
-            const response=await driver.findByIdAndUpdate(
+            const response=await Driver.findByIdAndUpdate(
                 driverId,
                 {
                     $set:{
@@ -128,7 +129,7 @@ export default class driverRepository{
     updateDriverImage=async(driverData : driverImage)=>{
         try {
             const {driverId,imageUrl}=driverData
-            const response = await driver.findByIdAndUpdate(
+            const response = await Driver.findByIdAndUpdate(
                 driverId,
                 {
                     $set:{
@@ -151,7 +152,7 @@ export default class driverRepository{
                 driverId,
                 rcImageUrl,
                 carImageUrl}=vehicleData
-                const response=await driver.findByIdAndUpdate(driverId,{
+                const response=await Driver.findByIdAndUpdate(driverId,{
                     $set:{
                         vehicle_details:{
                             registerationID,
@@ -175,7 +176,7 @@ export default class driverRepository{
     locationUpdate=async(data:locationData)=>{
         try {
             const {driverId,longitude,latitude}=data
-            const response=await driver.findByIdAndUpdate(
+            const response=await Driver.findByIdAndUpdate(
                 driverId,
                 {
                     $set:{
@@ -213,7 +214,7 @@ export default class driverRepository{
             if (mobile) {
                 updateFields.mobile = mobile;
             }
-            const response=await driver.findByIdAndUpdate(
+            const response=await Driver.findByIdAndUpdate(
                 driver_id,
                 {
                     $set:updateFields
@@ -231,8 +232,8 @@ export default class driverRepository{
     }
     updateStatus=async (driver_id:string)=>{
         try {
-            const data = await driver.findById(driver_id);
-            const driverData=await driver.findByIdAndUpdate(
+            const data = await Driver.findById(driver_id);
+            const driverData=await Driver.findByIdAndUpdate(
                 driver_id,
                 {
                     $set: {
@@ -251,13 +252,100 @@ export default class driverRepository{
     }
     findNearDrivers=async(vehicleModel:string)=>{
         try {
-            const driverIds=await driver.find({"vehicle_details.model": vehicleModel , account_status:{$in:["Good","Warning"]},isAvailable:true})
+            const driverIds=await Driver.find({"vehicle_details.model": vehicleModel , account_status:{$in:["Good","Warning"]},isAvailable:true})
                 .select("_id")
                 .exec();
                 return driverIds
         } catch (error) {
             console.log(error);
             
+        }
+    }
+    rideCompleteUpdate=async(data:RidePayment)=>{
+        try {
+            const {paymentMode,driverId,amount,rideId}=data
+            const driverData:DriverInterface = await Driver.findById(driverId)as DriverInterface
+            console.log(driverData,"dkajfhkh");
+            console.log(driverData.wallet,"dkajfhkh");
+            
+            if(paymentMode==='Stripe'){
+                try {
+                    const driverNewBalance = driverData?.wallet.balance + (amount/100);
+                    const driverTransaction = {
+                        date: new Date(),
+                        details: `Payment for the ride ${rideId}`,
+                        amount: amount / 100,
+                        status: "Credit",
+                    };                    
+                    const driver=await Driver.findByIdAndUpdate(driverId, {
+                        $set: {
+                            "wallet.balance": driverNewBalance,
+                        },
+                        $push: {
+                            "wallet.transactions": driverTransaction,
+                        },
+                        $inc: {
+                            "RideDetails.completedRides": 1,
+                            "RideDetails.totalEarnings":  amount / 100,
+                        },
+                        isAvailable: true,
+                    });
+                    return driver
+                } catch (error) {
+                    console.log(error);
+                    return((error as Error).message);
+                }
+            }else if(paymentMode==='Cash in hand'){
+                try {
+                    const driver=await Driver.findByIdAndUpdate(driverId, {
+                        $inc: {
+                            "RideDetails.completedRides": 1,
+                            "RideDetails.totalEarnings": amount,
+                        },
+                        isAvailable: true,
+                    },{
+                        new:true
+                    }
+                );
+                    console.log(driver,"ithu dr768989068690-");
+                    
+                    return driver
+                } catch (error) {
+                    console.log(error);
+                    return((error as Error).message);
+                }
+            }else if(paymentMode==='Wallet'){
+                try {
+                    const driverNewBalance = driverData.wallet.balance + amount;
+                    const driverTransaction = {
+                        date: new Date(),
+                        details: `Payment for the ride ${rideId}`,
+                        amount: amount,
+                        status: "Credit",
+                    };
+
+                    const driver=await Driver.findByIdAndUpdate(driverId, {
+                        $set: {
+                            "wallet.balance": driverNewBalance,
+                        },
+                        $push: {
+                            "wallet.transactions": driverTransaction,
+                        },
+                        $inc: {
+                            "RideDetails.completedRides": 1,
+                            "RideDetails.totalEarnings": amount,
+                        },
+                        isAvailable: true,
+                    });
+                    return driver
+                } catch (error) {
+                    console.log(error);
+                    return((error as Error).message);
+                }
+            }  
+        } catch (error) {
+            console.log(error);
+            return((error as Error).message);
         }
     }
 }

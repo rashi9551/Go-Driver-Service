@@ -16,8 +16,7 @@ export default class loginController{
         }
     }
     checkGoogleLoginDriver=async(data:any)=>{
-        try {
-            
+        try { 
             const {email}=data
             const response=await loginUseCase.checkGoogleLoginDriver(email)
             return(response)

@@ -2,14 +2,17 @@ import moment from "moment";
 import registrationUseCases from "../useCases/registration";
 import { ObjectId } from "mongodb";
 import { DriverInterface } from "../entities/driver";
+import { RidePayment } from "../utilities/interface";
+import dirverUseCase from "../useCases/driverUseCase";
 
 const registrationUseCase=new registrationUseCases()
+const dirverUseCases=new dirverUseCase()
 
 export default class driverControl{
     getData=async(data:any)=>{
         try {
             const {driver_id}=data
-            const driverData=await registrationUseCase.getDriverData(driver_id) as DriverInterface
+            const driverData=await dirverUseCases.getDriverData(driver_id) as DriverInterface
             if (driverData?.name) {
                 
                 const formattedDate = moment(Number(driverData.joiningDate)).format("dddd, DD-MM-YYYY");
@@ -33,7 +36,7 @@ export default class driverControl{
 
     profileUpdate=async(data:any)=>{
         try {
-            const driverDatas=await registrationUseCase.profileUpdate(data) as DriverInterface
+            const driverDatas=await dirverUseCases.profileUpdate(data) as DriverInterface
             if (driverDatas?.name) {
                 const formattedDate = moment(Number(driverDatas.joiningDate)).format("dddd, DD-MM-YYYY");
                 const formattedDriverData = { ...driverDatas?.toObject(), formattedDate };
@@ -56,7 +59,20 @@ export default class driverControl{
     }
     updateStatus=async(data:any)=>{
         try {
-            const response=await registrationUseCase.updateStatus(data.driver_id)
+            const response=await dirverUseCases.updateStatus(data.driver_id)
+            console.log(response);      
+            return(response);
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+       
+        
+    }
+    rideCompleteUpdate=async(data:RidePayment)=>{
+        try {
+            const response=await dirverUseCases.rideCompleteUpdate(data)
             console.log(response);      
             return(response);
             

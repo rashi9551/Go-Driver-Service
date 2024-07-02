@@ -15,12 +15,7 @@ interface DriverData{
     reffered_code:string
 }
 
-interface driverData{
-    name:string,
-    email:string,
-    mobile:number,
-    driver_id:string
-}
+
 
 interface identification {
     driverId: mongodb.ObjectId;
@@ -165,41 +160,6 @@ export default class registrationUseCase{
             throw new Error((error as Error).message)
         }
     }
-    getDriverData = async(driver_id:string)=>{
-        try {
-            const response=await driverRepo.getDriverData(driver_id)
-            if(response!=undefined){
-                return (response)
-            }else{
-                return ({message:"User not found"})
-            }
-        } catch (error) {
-            throw new Error((error as Error).message)
-        }
-    }
-    profileUpdate = async(driverData:driverData)=>{
-        try {
-            const response=await driverRepo.profileUpdate(driverData)
-            if(response!=undefined){
-                return (response)
-            }else{
-                return ({message:"User not found"})
-            }
-        } catch (error) {
-            throw new Error((error as Error).message)
-        }
-    }
-    updateStatus = async(driver_id:string)=>{
-        try {
-            const driverData=await driverRepo.updateStatus(driver_id)
-            if(driverData!=undefined){
-                return ({driverData,message:"Success"})
-            }else{
-                return ({message:"User not found"})
-            }
-        } catch (error) {
-            throw new Error((error as Error).message)
-        }
-    }
+    
 
 }

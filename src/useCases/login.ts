@@ -15,7 +15,7 @@ export default class loginUseCase{
                     response.account_status !== "Rejected" &&
                     response.account_status !== "Blocked"
                     ) {
-                    const token = await auth.createToken(response._id.toString());
+                    const token = await auth.createToken(response._id.toString(),'15m');
                     return { message: "Success", name: response.name, token, _id:response._id };
                 } else if (response.account_status === "Rejected") {
                     return { message: "Rejected", driverId:response._id };
@@ -42,7 +42,7 @@ export default class loginUseCase{
                     response.account_status !== "Rejected" &&
                     response.account_status !== "Blocked"
                     ) {
-                    const token = await auth.createToken(response._id.toString());
+                    const token = await auth.createToken(response._id.toString(),'15m');
                     return { message: "Success", name: response.name, token, _id:response._id };
                 } else if (response.account_status === "Rejected") {
                     return { message: "Rejected", driverId:response._id };

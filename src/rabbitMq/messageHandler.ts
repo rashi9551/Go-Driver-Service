@@ -68,6 +68,10 @@ export default class MessageHandler {
         response=await driverController.updateStatus(data)
         break;
 
+      case "driver-ride-complete-update":
+        response=await driverController.rideCompleteUpdate(data)
+        break;
+
       case "admin-pending-drivers":
         response=await adminController.pendingDrivers()
         break;

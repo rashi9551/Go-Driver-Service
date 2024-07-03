@@ -1,12 +1,10 @@
 import socketUseCase from "../useCases/socket"
 
 const socketUseCases=new socketUseCase()
-interface data{
-    vehicleModel:string
-}
+
 
 export default class socketController{
-    findNearbyDrivers=async(data:data)=>{
+    findNearbyDrivers=async(data:{vehicleModel:string})=>{
        try {
         const drivers=await socketUseCases.findDrivers(data.vehicleModel)
         return drivers

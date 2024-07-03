@@ -2,54 +2,9 @@ import { refferalCode } from "../utilities/referralCode";
 import bcrypt from "../services/bcrypt";
 import driverRepository from "../repositories/driverRepo";
 import { DriverInterface } from "../entities/driver";
-// import { ObjectId } from "mongoose";
-import mongodb from "mongodb";
+import { DriverData,Identification,identification,driverImage,vehicleDatas,locationData, driverData } from "../utilities/interface";
 
 const driverRepo=new driverRepository()
-
-interface DriverData{
-    name:string,
-    email:string,
-    mobile:number,
-    password:string,
-    reffered_code:string
-}
-
-
-
-interface identification {
-    driverId: mongodb.ObjectId;
-    aadharID: string;
-    licenseID: string;
-    licenseImageUrl: string;
-    aadharImageUrl: string;
-}
-
-interface Identification {
-    driverId: mongodb.ObjectId;
-    aadharID: string;
-    licenseID: string;
-    aadharImageUrl: string;
-    licenseImageUrl: string;
-}
-
-interface driverImage{
-    driverId:mongodb.ObjectId,
-    driverImageUrl:string
-}
-interface vehicleDatas{
-    registerationID:string,
-    model:string,
-    driverId:mongodb.ObjectId,
-    rcImageUrl:string,
-    carImageUrl:string
-}
-
-interface locationData{
-    driverId:mongodb.ObjectId,
-    latitude:number,
-    longitude:number
-}
 
 
 
@@ -66,6 +21,7 @@ export default class registrationUseCase{
                 mobile,
                 password:hashedPassword,
                 referral_code
+                
             }
             const response=await driverRepo.saveDriver(newDriver)
             if(typeof response !== "string" && response.email){

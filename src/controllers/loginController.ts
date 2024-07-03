@@ -4,7 +4,7 @@ import loginUseCases from "../useCases/login";
 
 const loginUseCase=new loginUseCases()
 export default class loginController{
-    checkLogin=async(data:any)=>{
+    checkLogin=async(data:{mobile:number})=>{
         try {
             
             const {mobile}=data
@@ -15,7 +15,7 @@ export default class loginController{
             
         }
     }
-    checkGoogleLoginDriver=async(data:any)=>{
+    checkGoogleLoginDriver=async(data:{email:string})=>{
         try { 
             const {email}=data
             const response=await loginUseCase.checkGoogleLoginDriver(email)

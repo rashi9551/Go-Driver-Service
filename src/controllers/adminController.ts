@@ -31,7 +31,7 @@ export default class adminController {
             return(error)
         }
     }
-    driverData=async(data:any)=>{
+    driverData=async(data:{id:string})=>{
         try {
             const {id}=data
             const response=await  driver.findById(id)
@@ -50,7 +50,7 @@ export default class adminController {
             return(error)
         }
     }
-    verifyDriver= async(data:any) =>{
+    verifyDriver= async(data:{id:string}) =>{
         try {
             const {id}=data
             const response=await  driver.findByIdAndUpdate(
@@ -89,7 +89,7 @@ export default class adminController {
             return((error as Error).message);
         }
     }
-    rejectDriver= async(data:any)=>{
+    rejectDriver= async(data:{id:string,reason:string})=>{
         try {
             const {id,reason}=data
             const response=await  driver.findByIdAndUpdate(
@@ -133,7 +133,7 @@ export default class adminController {
             return((error as Error).message);
         }
     }
-    updateDriverStatus=async(data:any)=>{
+    updateDriverStatus=async(data:{reason:string,status:string,id:string})=>{
         try {
             let newStatus;
             const {reason,status,id}=data

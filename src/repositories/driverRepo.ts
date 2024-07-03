@@ -1,54 +1,8 @@
 import { ObjectId } from "mongodb";
 import Driver, { DriverInterface, RideDetails } from "../entities/driver";
 import { RidePayment } from "../utilities/interface";
+import { driverData,Registration,Identification,DriverImage,vehicleDatas,locationData } from "../utilities/interface";
 
-interface Registration {
-    name: string;
-    email: string;
-    mobile: number;
-    password: string;
-    referral_code: string;
-}
-
-interface Identification {
-    driverId: ObjectId;
-    aadharID: string;
-    licenseID: string;
-    aadharImageUrl: string;
-    licenseImageUrl: string;
-}
-interface Identification {
-    driverId: ObjectId;
-    aadharID: string;
-    licenseID: string;
-    aadharImageUrl: string;
-    licenseImageUrl: string;
-}
-
-interface driverImage {
-    driverId: ObjectId;
-    imageUrl: string;
-}
-
-interface vehicleDatas{
-    registerationID:string,
-    model:string,
-    driverId:ObjectId,
-    rcImageUrl:string,
-    carImageUrl:string
-}
-interface locationData{
-    driverId:ObjectId,
-    latitude:number,
-    longitude:number
-}
-
-interface driverData{
-    name:string,
-    email:string,
-    mobile:number,
-    driver_id:string
-}
 
 
 
@@ -61,7 +15,8 @@ export default class driverRepository{
                 mobile:DriverData.mobile,
                 password:DriverData.password,
                 referral_code:DriverData.referral_code,
-                joiningDate:Date.now()
+                joiningDate:Date.now(),
+                identification:false
             })
             const saveDriver=await newDriver.save()
             return saveDriver
@@ -126,7 +81,7 @@ export default class driverRepository{
         }
 
     }
-    updateDriverImage=async(driverData : driverImage)=>{
+    updateDriverImage=async(driverData : DriverImage)=>{
         try {
             const {driverId,imageUrl}=driverData
             const response = await Driver.findByIdAndUpdate(
@@ -265,10 +220,8 @@ export default class driverRepository{
         try {
             const {paymentMode,driverId,amount,rideId}=data
             const driverData:DriverInterface = await Driver.findById(driverId)as DriverInterface
-            console.log(driverData,"dkajfhkh");
-            console.log(driverData.wallet,"dkajfhkh");
-            
-            if(paymentMode==='Stripe'){
+                        
+            if(paymentMode==='Upi'){
                 try {
                     const driverNewBalance = driverData?.wallet.balance + (amount/100);
                     const driverTransaction = {

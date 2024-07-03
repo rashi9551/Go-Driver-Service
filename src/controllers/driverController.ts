@@ -1,15 +1,12 @@
 import moment from "moment";
-import registrationUseCases from "../useCases/registration";
-import { ObjectId } from "mongodb";
 import { DriverInterface } from "../entities/driver";
-import { RidePayment } from "../utilities/interface";
+import { RidePayment, driverData } from "../utilities/interface";
 import dirverUseCase from "../useCases/driverUseCase";
 
-const registrationUseCase=new registrationUseCases()
 const dirverUseCases=new dirverUseCase()
 
 export default class driverControl{
-    getData=async(data:any)=>{
+    getData=async(data:{driver_id:string})=>{
         try {
             const {driver_id}=data
             const driverData=await dirverUseCases.getDriverData(driver_id) as DriverInterface
@@ -34,7 +31,7 @@ export default class driverControl{
         
     }
 
-    profileUpdate=async(data:any)=>{
+    profileUpdate=async(data:driverData)=>{
         try {
             const driverDatas=await dirverUseCases.profileUpdate(data) as DriverInterface
             if (driverDatas?.name) {
@@ -57,7 +54,7 @@ export default class driverControl{
         }
         
     }
-    updateStatus=async(data:any)=>{
+    updateStatus=async(data:{driver_id:string})=>{
         try {
             const response=await dirverUseCases.updateStatus(data.driver_id)
             console.log(response);      

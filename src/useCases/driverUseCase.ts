@@ -1,14 +1,10 @@
 import driverRepository from "../repositories/driverRepo"
 import { RidePayment } from "../utilities/interface"
+import { driverData } from "../utilities/interface"
 
 const driverRepo=new driverRepository()
 
-interface driverData{
-    name:string,
-    email:string,
-    mobile:number,
-    driver_id:string
-}
+
 
 
 export default class dirverUseCase{
@@ -16,7 +12,6 @@ export default class dirverUseCase{
         try {
             const response=await driverRepo.rideCompleteUpdate(data)
             console.log(response,"ithu driver payment reponse");
-            
             if(response){
                 return({message:"Success"})
             }else{

@@ -9,14 +9,17 @@ export default class loginUseCase{
     loginCheckDriver= async (mobile: number) => {
         try {
             const response = await driverRepo.findDriver(mobile) as DriverInterface
+            console.log(response)
             if (response) {
                 if (                
                     response.account_status !== "Pending" &&
                     response.account_status !== "Rejected" &&
-                    response.account_status !== "Blocked"
+                    response.account_status !== "Blocked"&&
+                    response.identification
                     ) {
                     const token = await auth.createToken(response._id.toString(),'15m');
-                    return { message: "Success", name: response.name, token, _id:response._id };
+                    const refreshToken = await auth.createToken(response._id.toString(),'7d');
+                    return { message: "Success", name: response.name, refreshToken,token, _id:response._id };
                 } else if (response.account_status === "Rejected") {
                     return { message: "Rejected", driverId:response._id };
                 } else if (response.account_status === "Blocked") {
@@ -40,10 +43,12 @@ export default class loginUseCase{
                 if (                
                     response.account_status !== "Pending" &&
                     response.account_status !== "Rejected" &&
-                    response.account_status !== "Blocked"
+                    response.account_status !== "Blocked"&&
+                    response.identification
                     ) {
                     const token = await auth.createToken(response._id.toString(),'15m');
-                    return { message: "Success", name: response.name, token, _id:response._id };
+                    const refreshToken = await auth.createToken(response._id.toString(),'7d');
+                    return { message: "Success", name: response.name, refreshToken,token, _id:response._id };
                 } else if (response.account_status === "Rejected") {
                     return { message: "Rejected", driverId:response._id };
                 } else if (response.account_status === "Blocked") {

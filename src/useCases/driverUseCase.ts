@@ -1,5 +1,5 @@
 import driverRepository from "../repositories/driverRepo"
-import { RidePayment } from "../utilities/interface"
+import { RidePayment, feedback } from "../utilities/interface"
 import { driverData } from "../utilities/interface"
 
 const driverRepo=new driverRepository()
@@ -52,6 +52,18 @@ export default class dirverUseCase{
     updateStatus = async(driver_id:string)=>{
         try {
             const driverData=await driverRepo.updateStatus(driver_id)
+            if(driverData!=undefined){
+                return (driverData)
+            }else{
+                return ({message:"User not found"})
+            }
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
+    }
+    feedback = async(data:feedback)=>{
+        try {
+            const driverData=await driverRepo.feedback(data)
             if(driverData!=undefined){
                 return ({driverData,message:"Success"})
             }else{

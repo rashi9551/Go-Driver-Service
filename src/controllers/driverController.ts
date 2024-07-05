@@ -21,7 +21,7 @@ export default class driverControl{
                 const newData = { ...formattedDriverData, formattedFeedbacks };
                 return(newData);
             } else {
-                return({ message: "Soemthing Internal Error" });
+                return({ message: "Soemthing Internal Error"});
             }
             
         } catch (error) {

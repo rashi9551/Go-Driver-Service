@@ -219,13 +219,17 @@ export default class driverRepository{
 
     feedback= async (data:feedback) => {
 
-        const { rating, feedback ,_id,driver_id } = data;
+        const { rating, feedback ,ride_id,driver_id } = data;
+        
         try {
             const newFeedback = {
                 feedback: feedback,
                 rating: rating,
+                ride_id:ride_id,
                 date: Date.now(),
             };
+            console.log(newFeedback,"=-=-=-=- feed");
+            
             await Driver.findByIdAndUpdate(driver_id, {
                 $inc: {
                     totalRatings: 1,

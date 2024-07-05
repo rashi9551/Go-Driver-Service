@@ -104,6 +104,10 @@ export default class MessageHandler {
         response=await adminController.updateDriverStatus(data)
         break;
 
+      case "admin-get-dashboarData":
+        response=await adminController.dashboardData()
+        break;
+
       case "findNearbyDrivers":
         response=await socketController.findNearbyDrivers(data)
         break;

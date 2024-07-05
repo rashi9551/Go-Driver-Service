@@ -179,5 +179,36 @@ export default class adminController {
             return(error);
         }
     }
+    dashboardData=async()=>{
+        try {
+            const response= await driver
+            .aggregate([
+                {
+                    $group: {
+                        _id: { $month: "$joiningDate" },
+                        driverCount: { $sum: 1 },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        month: "$_id",
+                        driverCount: 1,
+                    },
+                },
+                {
+                    $sort: { month: 1 },
+                },
+            ])
+            .exec()
+            const pendingDrivers=await driver.find({account_status:"Pending"}).count()
+            const blockedDrivers=await driver.find({account_status:"Blocked"}).count()
+            const totalDrivers=await driver.find().count()
+            return({response,pendingDrivers,blockedDrivers,totalDrivers})
+        } catch (error) {
+            console.log(error);
+            return(error)
+        }
+    }
 
 }

@@ -67,8 +67,9 @@ export interface DriverInterface extends Document {
     feedbacks: [
         {
             feedback: string;
+            ride_id: string;
             rating: number;
-            date:Date
+            date:Date;
         }
     ];
 }
@@ -219,6 +220,9 @@ const DriverSchema: Schema = new Schema({
     feedbacks: [
         {
             feedback: {
+                type: String,
+            },
+            ride_id: {
                 type: String,
             },
             rating: {

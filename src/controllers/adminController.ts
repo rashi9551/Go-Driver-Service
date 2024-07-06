@@ -1,11 +1,12 @@
-import moment from "moment";
-import driver from "../entities/driver";
-import { Request,Response } from "express";
-import { sendMail } from "../services/nodeMailer";
+import adminUseCases from "../useCases/adminUseCase";
+import { id, UpdateDriverStatusData } from "../utilities/interface";
+
+const adminUseCase=new adminUseCases()
+
 export default class adminController {
     pendingDrivers=async()=>{
         try {
-            const response=await driver.find({account_status:"Pending"})
+            const response=await adminUseCase.pendingDrivers()
             return(response)
         } catch (error) {
            console.log(error );
@@ -15,7 +16,7 @@ export default class adminController {
     }
     verifiedDrivers=async()=>{
         try {
-            const response=await driver.find({account_status:{ $nin: ["Pending", "Rejected", "Blocked"] } })
+            const response=await adminUseCase.verifiedDrivers()
             return(response)
         } catch (error) {
             console.log(error);
@@ -24,66 +25,26 @@ export default class adminController {
     }
     blockedDrivers=async()=>{
         try {
-            const response=await driver.find({account_status:"Blocked"})
+            const response=await adminUseCase.blockedDrivers()
             return(response)
         } catch (error) {
             console.log(error);
             return(error)
         }
     }
-    driverData=async(data:{id:string})=>{
+    driverData=async(data:id)=>{
         try {
-            const {id}=data
-            const response=await  driver.findById(id)
-            if(response){
-                const formattedRideDate = {...response?.toObject()}
-                    const formattedFeedbacks = formattedRideDate?.feedbacks.map((feedbacks)=> ({
-                        ...feedbacks,
-                        formattedDate:moment(feedbacks.date).format("DD-MM-YYYY")
-                    }))
-                    const newData ={...formattedRideDate,formattedFeedbacks}
-                    console.log(newData);
-                    return(newData);
-                }
+            const response=await adminUseCase.driverData(data)
+            return(response);
         } catch (error) {
             console.log(error);
             return(error)
         }
     }
-    verifyDriver= async(data:{id:string}) =>{
+    verifyDriver= async(data:id) =>{
         try {
-            const {id}=data
-            const response=await  driver.findByIdAndUpdate(
-                id,
-                {
-                    $set:{
-                        account_status:"Good"
-                    }
-                },{
-                    new:true
-                }
-            )
-
-            if(response?.email){
-                const subject = "Account Verified Successfully";
-                const text = `Hello ${response.name}, 
-                Thank you for registering with Go! We're excited to have you on board. Your account has been successfully verified.
-                
-                Thank you for choosing Go. We look forward to serving you and making your journeys safe and convenient.
-                
-                Best regards,
-                Go India`;
-
-                try {
-                    await sendMail(response.email,subject,text)
-                    return({message:"Success"})
-                } catch (error) {
-                    console.log(error);
-                    return((error as Error).message);
-                }
-            }else{
-                return("Somthing error");
-            }
+            const response=await adminUseCase.verifyDriver(data)
+            return(response);
         } catch (error) {
             console.log(error);
             return((error as Error).message);
@@ -91,120 +52,25 @@ export default class adminController {
     }
     rejectDriver= async(data:{id:string,reason:string})=>{
         try {
-            const {id,reason}=data
-            const response=await  driver.findByIdAndUpdate(
-                id,
-                {
-                    $set:{
-                        account_status:"Rejected"
-                    }
-                },{
-                    new:true
-                }
-            )
-
-            if(response?.email){
-                const subject = "Account Registration  Rejected";
-                const text = `Hello ${response.name}, 
-                We regret to inform you that your registration with Go has been rejected. We appreciate your interest, 
-                but unfortunately, we are unable to accept your application at this time.
-                
-                Reason : ${reason}
-
-                You have the option to resubmit your registration and provide any missing or updated information.
-
-                If you have any questions or need further information, please feel free to contact our support team.
-                
-                Sincerely,
-                Go India`;
-
-                try {
-                    await sendMail(response.email,subject,text)
-                    return({message:"Success"})
-                } catch (error) {
-                    console.log(error);
-                    return((error as Error).message);
-                }
-            }else{
-                return("Somthing error");
-            }
+            const response=await adminUseCase.rejectDriver(data)
+            return(response);
         } catch (error) {
             console.log(error);
             return((error as Error).message);
         }
     }
-    updateDriverStatus=async(data:{reason:string,status:string,id:string})=>{
+    updateDriverStatus=async(data:UpdateDriverStatusData)=>{
         try {
-            let newStatus;
-            const {reason,status,id}=data
-            if(status=="Block")newStatus="Blocked"
-            else newStatus=status
-            
-            const response=await driver.findByIdAndUpdate(
-                id,
-                {
-                    $set:{
-                        account_status:newStatus
-                    }
-                },
-                {
-                    new:true
-                }
-            )
-            if(response?.email){
-                const subject = "Account Status Updated";
-                const text = `Hello ${response.name}, 
-
-                We inform you that your Safely account status has been updated.
-
-                Status : ${newStatus}
-                Reason : ${reason}
-
-                If you have any questions or need further information, please feel free to contact our support team.
-                
-                Sincerely,
-                Safely India`;
-
-                try {
-                    await sendMail(response.email, subject, text);
-                    return({ message: "Success" });
-                } catch (error) {
-                    console.log(error);
-                    return((error as Error).message);
-                }
-            } else {
-                return("Somthing error");
-            }
+            const response=await adminUseCase.updateDriverStatus(data)
+            return(response);
         } catch (error) {
             return(error);
         }
     }
     dashboardData=async()=>{
         try {
-            const response= await driver
-            .aggregate([
-                {
-                    $group: {
-                        _id: { $month: "$joiningDate" },
-                        driverCount: { $sum: 1 },
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        month: "$_id",
-                        driverCount: 1,
-                    },
-                },
-                {
-                    $sort: { month: 1 },
-                },
-            ])
-            .exec()
-            const pendingDrivers=await driver.find({account_status:"Pending"}).count()
-            const blockedDrivers=await driver.find({account_status:"Blocked"}).count()
-            const totalDrivers=await driver.find().count()
-            return({response,pendingDrivers,blockedDrivers,totalDrivers})
+            const response=await adminUseCase.dashboardData()
+            return(response);
         } catch (error) {
             console.log(error);
             return(error)

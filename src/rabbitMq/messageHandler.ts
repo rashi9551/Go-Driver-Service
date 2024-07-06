@@ -26,8 +26,6 @@ export default class MessageHandler {
         break;
 
       case "google-login":
-        console.log("vernnindu data",data);
-        
         response=await loginController.checkGoogleLoginDriver(data)
         break;
 
@@ -114,6 +112,10 @@ export default class MessageHandler {
 
       case "updateDriverStatus":
         response=await socketController.updateDriverStatus(data.driverId)
+        break;
+
+      case "ride-cancelled":
+        response=await socketController.rideCancelled(data.driverId)
         break;
 
       default:

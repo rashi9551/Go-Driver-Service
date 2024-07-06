@@ -59,7 +59,6 @@ export default class driverControl{
             const response=await dirverUseCases.updateStatus(data.driver_id)
             console.log(response);      
             return(response);
-            
         } catch (error) {
             console.log(error);
             
@@ -72,7 +71,6 @@ export default class driverControl{
             const response=await dirverUseCases.rideCompleteUpdate(data)
             console.log(response);      
             return(response);
-            
         } catch (error) {
             console.log(error);
         }    

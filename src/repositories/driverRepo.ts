@@ -205,6 +205,31 @@ export default class driverRepository{
 
         }
     }
+    rideCancelled=async (driver_id:string)=>{
+        try {
+            const data = await Driver.findById(driver_id);
+            if (data && !data.isAvailable) {
+                const driverData = await Driver.findByIdAndUpdate(
+                    driver_id,
+                    {
+                        $set: {
+                            isAvailable: true,
+                        },
+                        $inc: {
+                            "RideDetails.cancelledRides": 1,
+                        },
+                    },
+                    {
+                        new: true,
+                    }
+                );
+                return (driverData)
+            }            
+        } catch (error) {
+            return (error as Error).message;
+
+        }
+    }
     findNearDrivers=async(vehicleModel:string)=>{
         try {
             const driverIds=await Driver.find({"vehicle_details.model": vehicleModel , account_status:{$in:["Good","Warning"]},isAvailable:true})

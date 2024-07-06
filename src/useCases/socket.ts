@@ -25,4 +25,17 @@ export default class socketUseCase{
             console.log(error);
         }
     }
+    rideCancelled=async(driverId:string)=>{
+        try {
+            const driver=await driverRepo.rideCancelled(driverId)
+            if(driver)
+            {
+                return {message:"success"}
+            }else{
+                return {message:"something went wrong"}
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }

@@ -26,5 +26,16 @@ export default class socketController{
        }
         
     }
+    rideCancelled=async(driverId:string)=>{
+       try {
+        const drivers=await socketUseCases.rideCancelled(driverId)
+        return drivers
+       } catch (error) {
+        console.log(error);
+        return({ error: (error as Error).message });
+
+       }
+        
+    }
     
 }

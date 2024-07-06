@@ -28,6 +28,7 @@ export interface RidePayment {
     rating:string,
     feedback:string,
     driver_id:string,
+    date:string
 }
 
 
@@ -85,3 +86,14 @@ export interface locationData{
   latitude:number,
   longitude:number
 }
+export interface id{
+  id:string,
+  reason:string
+}
+
+export interface UpdateDriverStatusData {
+  reason: string;
+  status: string;
+  id: string;
+}
+

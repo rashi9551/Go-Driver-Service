@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  driver-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env

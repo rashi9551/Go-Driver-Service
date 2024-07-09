@@ -90,10 +90,23 @@ export interface id{
   id:string,
   reason:string
 }
+export interface redeem{
+  balance:string,
+  driver_id:string,
+  upiId:string,
+}
 
 export interface UpdateDriverStatusData {
   reason: string;
   status: string;
   id: string;
+}
+
+export interface AuthResponse {
+  message: string;
+  name: string;
+  refreshToken: string;
+  token: string;
+  _id: string;
 }
 

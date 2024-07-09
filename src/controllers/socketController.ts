@@ -1,4 +1,4 @@
-import socketUseCase from "../useCases/socket"
+import socketUseCase from "../useCases/socketUseCase"
 
 const socketUseCases=new socketUseCase()
 

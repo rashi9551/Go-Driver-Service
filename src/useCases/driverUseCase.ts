@@ -1,14 +1,22 @@
+import { DriverInterface } from "../entities/driver"
 import driverRepository from "../repositories/driverRepo"
-import { RidePayment, feedback } from "../utilities/interface"
+import { Message, RidePayment, feedback, redeem } from "../utilities/interface"
 import { driverData } from "../utilities/interface"
+import Razorpay  from "razorpay"
+import Stripe from "stripe";
+import 'dotenv/config';
 
 const driverRepo=new driverRepository()
 
-
+const razorpayInstance:any = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID || "",
+    key_secret: process.env.RAZORPAY_SECRET || "",
+  });
+  
 
 
 export default class dirverUseCase{
-    rideCompleteUpdate = async(data:RidePayment)=>{
+    rideCompleteUpdate = async(data:RidePayment):Promise<Message>=>{
         try {
             const response=await driverRepo.rideCompleteUpdate(data)
             console.log(response,"ithu driver payment reponse");
@@ -25,9 +33,9 @@ export default class dirverUseCase{
         }
     }
 
-    getDriverData = async(driver_id:string)=>{
+    getDriverData = async(driver_id:string):Promise<DriverInterface | Message>=>{
         try {
-            const response=await driverRepo.getDriverData(driver_id)
+            const response : DriverInterface=await driverRepo.getDriverData(driver_id) as DriverInterface
             if(response!=undefined){
                 return (response)
             }else{
@@ -37,9 +45,9 @@ export default class dirverUseCase{
             throw new Error((error as Error).message)
         }
     }
-    profileUpdate = async(driverData:driverData)=>{
+    profileUpdate = async(driverData:driverData):Promise<DriverInterface | Message>=>{
         try {
-            const response=await driverRepo.profileUpdate(driverData)
+            const response:DriverInterface=await driverRepo.profileUpdate(driverData) as DriverInterface
             if(response!=undefined){
                 return (response)
             }else{
@@ -49,9 +57,9 @@ export default class dirverUseCase{
             throw new Error((error as Error).message)
         }
     }
-    updateStatus = async(driver_id:string)=>{
+    updateStatus = async(driver_id:string):Promise<DriverInterface | Message>=>{
         try {
-            const driverData=await driverRepo.updateStatus(driver_id)
+            const driverData:DriverInterface=await driverRepo.updateStatus(driver_id) as DriverInterface
             if(driverData!=undefined){
                 return (driverData)
             }else{
@@ -63,12 +71,37 @@ export default class dirverUseCase{
     }
     feedback = async(data:feedback)=>{
         try {
-            const driverData=await driverRepo.feedback(data)
+            const driverData=await driverRepo.feedback(data) 
             if(driverData!=undefined){
                 return ({driverData,message:"Success"})
             }else{
                 return ({message:"User not found"})
             }
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
+    }
+    redeemWalletRazorpay = async(data:redeem)=>{
+        try {
+            const {balance,upiId}=data
+            const amount=Number(balance)
+              
+            const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
+                apiVersion: "2024-06-20",
+            });
+
+            const payout = await stripe.payouts.create(
+                {
+                  amount: amount * 100, 
+                  currency: 'inr',
+                },
+                {
+                  stripeAccount: "8978ugbhs556",
+                }
+              );
+
+              console.log(payout,"-=-=-");
+              
         } catch (error) {
             throw new Error((error as Error).message)
         }

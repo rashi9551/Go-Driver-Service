@@ -3,40 +3,37 @@ import { id, UpdateDriverStatusData } from "../utilities/interface";
 
 
 export default class adminDriverRepository{
-    pendingDrivers=async ()=>{
+    pendingDrivers=async ():Promise<DriverInterface|String |{}>=>{
         try {
-            const driverData=await Driver.find({account_status:"Pending"})
+            const driverData:DriverInterface | {} =await Driver.find({account_status:"Pending"}) as DriverInterface | {}
             return driverData
         } catch (error) {
             console.log(error);
             return (error as Error).message;
-
         }
     }
-    verifiedDrivers=async ()=>{
+    verifiedDrivers=async ():Promise<DriverInterface|String |{}>=>{
         try {
-            const driverData=await Driver.find({account_status:{ $nin: ["Pending", "Rejected", "Blocked"] } })
+            const driverData:DriverInterface | {}=await Driver.find({account_status:{ $nin: ["Pending", "Rejected", "Blocked"] } }) as DriverInterface|{}
             return driverData
         } catch (error) {
             console.log(error);
             return (error as Error).message;
-
         }
     }
-    blockedDrivers=async ()=>{
+    blockedDrivers=async ():Promise<DriverInterface|String |{}>=>{
         try {
-            const driverData=await Driver.find({account_status:"Blocked"})
+            const driverData :DriverInterface|{}=await Driver.find({account_status:"Blocked"}) as DriverInterface |{}
             return driverData
         } catch (error) {
             console.log(error);
             return (error as Error).message;
-
         }
     }
-    driverData=async (data:id)=>{
+    driverData=async (data:id):Promise<DriverInterface|String |{}>=>{
         try {
             const {id}=data
-            const driverData=await Driver.findById(id)            
+            const driverData:DriverInterface=await Driver.findById(id) as DriverInterface            
             return driverData
         } catch (error) {
             console.log(error);
@@ -44,10 +41,10 @@ export default class adminDriverRepository{
 
         }
     }
-    verifyDriver=async (data:id)=>{
+    verifyDriver=async (data:id):Promise<DriverInterface|String |{}> =>{
         try {
             const {id}=data
-            const driverData=await Driver.findByIdAndUpdate(
+            const driverData:DriverInterface=await Driver.findByIdAndUpdate(
                 id,
                 {
                     $set:{
@@ -56,7 +53,7 @@ export default class adminDriverRepository{
                 },{
                     new:true
                 }
-            )
+            ) as DriverInterface
            
             return driverData
         } catch (error) {
@@ -65,10 +62,10 @@ export default class adminDriverRepository{
 
         }
     }
-    rejectDriver=async (data:id)=>{
+    rejectDriver=async (data:id):Promise<DriverInterface|String |{}> =>{
         try {
             const {id}=data
-            const driverData=await Driver.findByIdAndUpdate(
+            const driverData:DriverInterface=await Driver.findByIdAndUpdate(
                 id,
                 {
                     $set:{
@@ -77,7 +74,7 @@ export default class adminDriverRepository{
                 },{
                     new:true
                 }
-            )
+            )as DriverInterface
            
             return driverData
         } catch (error) {
@@ -86,7 +83,7 @@ export default class adminDriverRepository{
 
         }
     }
-    updateDriverStatus=async (data:UpdateDriverStatusData)=>{
+    updateDriverStatus=async (data:UpdateDriverStatusData):Promise<DriverInterface|String |{}> =>{
         try {
             let newStatus;
             const {reason,status,id}=data
@@ -103,13 +100,11 @@ export default class adminDriverRepository{
                 {
                     new:true
                 }
-            )
-           
+            ) as DriverInterface
             return driverData
         } catch (error) {
             console.log(error);
             return (error as Error).message;
-
         }
     }
 
@@ -139,13 +134,10 @@ export default class adminDriverRepository{
                 Driver.find({ account_status: "Blocked" }).count(),
                 Driver.find().count()
               ]);
-              
-           
             return({response,pendingDrivers,blockedDrivers,totalDrivers})
         } catch (error) {
             console.log(error);
             return (error as Error).message;
-
         }
     }
     

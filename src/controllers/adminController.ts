@@ -1,49 +1,50 @@
+import { DriverInterface } from "../entities/driver";
 import adminUseCases from "../useCases/adminUseCase";
 import { id, UpdateDriverStatusData } from "../utilities/interface";
 
 const adminUseCase=new adminUseCases()
 
 export default class adminController {
-    pendingDrivers=async()=>{
+    pendingDrivers=async():Promise<DriverInterface|String>=>{
         try {
-            const response=await adminUseCase.pendingDrivers()
+            const response:DriverInterface=await adminUseCase.pendingDrivers() as DriverInterface
             return(response)
         } catch (error) {
            console.log(error );
-            return(error)
+           throw new Error((error as Error).message)
         }
         
     }
-    verifiedDrivers=async()=>{
+    verifiedDrivers=async():Promise<DriverInterface|String |{}>=>{
         try {
-            const response=await adminUseCase.verifiedDrivers()
+            const response :DriverInterface=await adminUseCase.verifiedDrivers() as DriverInterface
             return(response)
         } catch (error) {
             console.log(error);
-            return(error)
+            throw new Error((error as Error).message)
         }
     }
-    blockedDrivers=async()=>{
+    blockedDrivers=async():Promise<DriverInterface|String>=>{
         try {
-            const response=await adminUseCase.blockedDrivers()
+            const response:DriverInterface=await adminUseCase.blockedDrivers() as DriverInterface
             return(response)
         } catch (error) {
             console.log(error);
-            return(error)
+            throw new Error((error as Error).message)
         }
     }
-    driverData=async(data:id)=>{
+    driverData=async(data:id):Promise<DriverInterface|String>=>{
         try {
-            const response=await adminUseCase.driverData(data)
+            const response:DriverInterface=await adminUseCase.driverData(data)as DriverInterface
             return(response);
         } catch (error) {
             console.log(error);
-            return(error)
+            throw new Error((error as Error).message)
         }
     }
-    verifyDriver= async(data:id) =>{
+    verifyDriver= async(data:id):Promise<DriverInterface|String |{}> =>{
         try {
-            const response=await adminUseCase.verifyDriver(data)
+            const response:DriverInterface | {}=await adminUseCase.verifyDriver(data) as DriverInterface|{}
             return(response);
         } catch (error) {
             console.log(error);

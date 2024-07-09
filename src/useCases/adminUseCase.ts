@@ -1,40 +1,40 @@
 import moment from "moment"
 import adminRepository from "../repositories/adminDriverRepo"
-import { feedback, id, UpdateDriverStatusData } from "../utilities/interface"
+import { feedback, id, Message, UpdateDriverStatusData } from "../utilities/interface"
 import { DriverInterface } from "../entities/driver"
 import { sendMail } from "../services/nodeMailer"
 
 const adminRepo=new adminRepository()
 
 export default class adminUseCases{
-    pendingDrivers = async()=>{
+    pendingDrivers = async():Promise<DriverInterface|String>=>{
         try {
-            const driverData=await adminRepo.pendingDrivers()
+            const driverData : DriverInterface=await adminRepo.pendingDrivers() as DriverInterface
             return(driverData)
         } catch (error) {
             console.log(error);
             throw new Error((error as Error).message)
         }
     }
-    verifiedDrivers = async()=>{
+    verifiedDrivers = async():Promise<DriverInterface|String |{}>=>{
         try {
-            const driverData=await adminRepo.verifiedDrivers()
+            const driverData:DriverInterface=await adminRepo.verifiedDrivers() as DriverInterface
             return(driverData)
         } catch (error) {
             console.log(error);
             throw new Error((error as Error).message)
         }
     }
-    blockedDrivers = async()=>{
+    blockedDrivers = async():Promise<DriverInterface|String |{}>=>{
         try {
-            const driverData=await adminRepo.blockedDrivers()
+            const driverData:DriverInterface=await adminRepo.blockedDrivers() as DriverInterface
             return(driverData)
         } catch (error) {
             console.log(error);
             throw new Error((error as Error).message)
         }
     }
-    driverData = async(data:id)=>{
+    driverData = async(data:id):Promise<DriverInterface|String>=>{
         try {
             const response=await adminRepo.driverData(data) as DriverInterface
             if(response){
@@ -46,13 +46,14 @@ export default class adminUseCases{
                     const newData ={...formattedRideDate,formattedFeedbacks}
                     console.log(newData);
                     return(newData)
-                }
+            }
+            return ""
         } catch (error) {
             console.log(error);
             throw new Error((error as Error).message)
         }
     }
-    verifyDriver = async(data:id)=>{
+    verifyDriver = async(data:id):Promise<DriverInterface|String |{}> =>{
         try {
             const response=await adminRepo.verifyDriver(data) as DriverInterface
             if(response?.email){
@@ -80,7 +81,7 @@ export default class adminUseCases{
             throw new Error((error as Error).message)
         }
     }
-    rejectDriver = async(data:id)=>{
+    rejectDriver = async(data:id):Promise<Message |string> =>{
         try {
             const response=await adminRepo.rejectDriver(data) as DriverInterface
             const {id,reason}=data
@@ -114,7 +115,7 @@ export default class adminUseCases{
             throw new Error((error as Error).message)
         }
     }
-    updateDriverStatus = async(data:UpdateDriverStatusData)=>{
+    updateDriverStatus = async(data:UpdateDriverStatusData):Promise<Message |string>=>{
         try {
             const response=await adminRepo.updateDriverStatus(data) as DriverInterface
             let newStatus

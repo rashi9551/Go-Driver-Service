@@ -70,6 +70,10 @@ export default class MessageHandler {
         response=await driverController.rideCompleteUpdate(data)
         break;
 
+      case "redeem-driver-wallet-razorpay":
+        response=await driverController.redeemWalletRazorpay(data)
+        break;
+
       case "feedback-submit":
         response=await driverController.feedback(data)
         break;

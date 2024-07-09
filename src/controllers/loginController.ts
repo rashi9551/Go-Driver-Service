@@ -1,12 +1,11 @@
 import { Request,Response,NextFunction } from "express";
-import ioginUseCases from "../useCases/login";
-import loginUseCases from "../useCases/login";
+import ioginUseCases from "../useCases/loginUseCase";
+import loginUseCases from "../useCases/loginUseCase";
 
 const loginUseCase=new loginUseCases()
 export default class loginController{
     checkLogin=async(data:{mobile:number})=>{
         try {
-            
             const {mobile}=data
             const response=await loginUseCase.loginCheckDriver(mobile)
             return(response)

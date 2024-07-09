@@ -1,6 +1,6 @@
 import moment from "moment";
 import { DriverInterface } from "../entities/driver";
-import { RidePayment, driverData, feedback } from "../utilities/interface";
+import { RidePayment, driverData, feedback, redeem } from "../utilities/interface";
 import dirverUseCase from "../useCases/driverUseCase";
 
 const dirverUseCases=new dirverUseCase()
@@ -23,7 +23,6 @@ export default class driverControl{
             } else {
                 return({ message: "Soemthing Internal Error"});
             }
-            
         } catch (error) {
             console.log(error);
             
@@ -54,14 +53,15 @@ export default class driverControl{
         }
         
     }
-    updateStatus=async(data:{driver_id:string})=>{
+    updateStatus=async(data:{driver_id:string}):Promise<DriverInterface|String>=>{
         try {
-            const response=await dirverUseCases.updateStatus(data.driver_id)
+            const response :DriverInterface=await dirverUseCases.updateStatus(data.driver_id) as DriverInterface
             console.log(response);      
             return(response);
         } catch (error) {
             console.log(error);
-            
+            throw new Error((error as Error).message)
+
         }
        
         
@@ -85,8 +85,17 @@ export default class driverControl{
             console.log(error);
             
         }
-       
-        
+    }
+
+    redeemWalletRazorpay=async(data:redeem)=>{
+        try {
+            const response=await dirverUseCases.redeemWalletRazorpay(data)
+            console.log(response);      
+            return(response);           
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
 }

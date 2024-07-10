@@ -11,8 +11,8 @@ class App{
     constructor() {
       this.app=express()
       this.server=http.createServer(this.app)
-      this.server.listen(PORT,()=>{
-        console.log(`server  http://localhost:${PORT}`);
+      this.server.listen(process.env.DRIVER_PORT,()=>{
+        console.log(`server  http://localhost:${process.env.DRIVER_PORT}`);
         
       })
         RabbitMQClient.initialize();

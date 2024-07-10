@@ -6,12 +6,12 @@ dotenv.config()
 
 const connectDB=async():Promise<void>=>{
     try {
-        const  url=process.env.MONGO_URL
-        if(!url)
+        const MONGO_URLURL=process.env.NODE_ENV==='dev'?process.env.MONGO_URL_DEV:process.env.MONGO_URL_PRO
+        if(!MONGO_URLURL)
             {
                 throw new Error("MONGO_URL is not defined in environment variables.")
             }
-            await mongoose.connect(url)
+            await mongoose.connect(`${MONGO_URLURL}/Go-driver`)
             console.log("database Connected");
             
     } catch (error) {

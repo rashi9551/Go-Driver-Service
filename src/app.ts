@@ -7,11 +7,9 @@ import http from 'http'
 const PORT=process.env.PORT
 class App{
     public app: Application;
-    public server;
     constructor() {
       this.app=express()
-      this.server=http.createServer(this.app)
-      this.server.listen(process.env.DRIVER_PORT,()=>{
+      this.app.listen(process.env.DRIVER_PORT,()=>{
         console.log(`server  http://localhost:${process.env.DRIVER_PORT}`);
         
       })

@@ -1,6 +1,6 @@
 import moment from "moment";
 import { DriverInterface } from "../entities/driver";
-import { RidePayment, driverData, feedback, redeem } from "../utilities/interface";
+import { RidePayment, driverData, feedback, redeem, report } from "../utilities/interface";
 import dirverUseCase from "../useCases/driverUseCase";
 
 const dirverUseCases=new dirverUseCase()
@@ -79,6 +79,18 @@ export default class driverControl{
     feedback=async(data:feedback)=>{
         try {
             const response=await dirverUseCases.feedback(data)
+            console.log(response);      
+            return(response);           
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+    report=async(data:report)=>{
+        try {
+            console.log(data,"=-=-=-=-=-=-");
+            
+            const response=await dirverUseCases.report(data)
             console.log(response);      
             return(response);           
         } catch (error) {

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import Driver, { DriverInterface, RideDetails } from "../entities/driver";
-import { Message, RidePayment, feedback } from "../utilities/interface";
+import { Message, RidePayment, feedback, report } from "../utilities/interface";
 import { driverData,Registration,Identification,DriverImage,vehicleDatas,locationData } from "../utilities/interface";
 
 
@@ -265,6 +265,32 @@ export default class driverRepository{
             });
             return({ message: "Success" });
         } catch (error) {
+            return((error as Error).message);
+        }
+    }
+    report= async (data:report)=> {
+
+        const {  reason ,ride_id,driver_id } = data;
+        
+        try {
+            const newReport = {
+                reason: reason,
+                ride_id:ride_id,
+                date: Date.now(),
+            };
+            console.log(newReport,"=-=-=-=- feed");
+            
+            await Driver.findByIdAndUpdate(driver_id, {
+                $inc: {
+                    totalReports: 1,
+                },
+                $push: {
+                    reports: newReport,
+                },
+            });
+            return({ message: "Success" });
+        } catch (error) {
+            console.log(error);
             return((error as Error).message);
         }
     }

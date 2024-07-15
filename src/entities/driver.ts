@@ -72,6 +72,13 @@ export interface DriverInterface extends Document {
             date:Date;
         }
     ];
+    reports: [
+        {
+            reson: string;
+            ride_id: string;
+            date:Date;
+        }
+    ];
 }
 
 interface Aadhar {
@@ -217,6 +224,10 @@ const DriverSchema: Schema = new Schema({
         default: 0,
 
     },
+    totalReports:{
+        type:Number,
+        default: 0,
+    },
     feedbacks: [
         {
             feedback: {
@@ -227,6 +238,19 @@ const DriverSchema: Schema = new Schema({
             },
             rating: {
                 type: Number,
+            },
+            date:{
+                type:Date
+            }
+        },
+    ],
+    reports: [
+        {
+            reason: {
+                type: String,
+            },
+            ride_id: {
+                type: String,
             },
             date:{
                 type:Date

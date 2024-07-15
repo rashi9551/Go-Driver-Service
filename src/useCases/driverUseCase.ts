@@ -1,6 +1,6 @@
 import { DriverInterface } from "../entities/driver"
 import driverRepository from "../repositories/driverRepo"
-import { Message, RidePayment, feedback, redeem } from "../utilities/interface"
+import { Message, RidePayment, feedback, redeem, report } from "../utilities/interface"
 import { driverData } from "../utilities/interface"
 import Razorpay  from "razorpay"
 import Stripe from "stripe";
@@ -72,6 +72,18 @@ export default class dirverUseCase{
     feedback = async(data:feedback)=>{
         try {
             const driverData=await driverRepo.feedback(data) 
+            if(driverData!=undefined){
+                return ({driverData,message:"Success"})
+            }else{
+                return ({message:"User not found"})
+            }
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
+    }
+    report = async(data:report)=>{
+        try {
+            const driverData=await driverRepo.report(data) 
             if(driverData!=undefined){
                 return ({driverData,message:"Success"})
             }else{

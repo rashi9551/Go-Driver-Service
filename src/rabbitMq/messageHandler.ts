@@ -78,6 +78,10 @@ export default class MessageHandler {
         response=await driverController.feedback(data)
         break;
 
+      case "report-submit":
+        response=await driverController.report(data)
+        break;
+
       case "admin-pending-drivers":
         response=await adminController.pendingDrivers()
         break;

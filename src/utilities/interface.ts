@@ -30,6 +30,12 @@ export interface RidePayment {
     driver_id:string,
     date:string
 }
+  export interface report{
+    ride_id:string,
+    reason:string,
+    driver_id:string,
+    date:string
+}
 
 
 export interface DriverData{

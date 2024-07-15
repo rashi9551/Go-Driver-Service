@@ -1,6 +1,6 @@
 import moment from "moment"
 import adminRepository from "../repositories/adminDriverRepo"
-import { feedback, id, Message, UpdateDriverStatusData } from "../utilities/interface"
+import { feedback, id, Message, report, UpdateDriverStatusData } from "../utilities/interface"
 import { DriverInterface } from "../entities/driver"
 import { sendMail } from "../services/nodeMailer"
 
@@ -36,16 +36,22 @@ export default class adminUseCases{
     }
     driverData = async(data:id):Promise<DriverInterface|String>=>{
         try {
-            const response=await adminRepo.driverData(data) as DriverInterface
+            const response :DriverInterface=await adminRepo.driverData(data) as DriverInterface
             if(response){
                 const formattedRideDate = {...response?.toObject()}
+                console.log(formattedRideDate,"asdfasdf");
+                
                     const formattedFeedbacks = formattedRideDate?.feedbacks.map((feedbacks:feedback)=> ({
                         ...feedbacks,
                         formattedDate:moment(feedbacks.date).format("DD-MM-YYYY")
                     }))
-                    const newData ={...formattedRideDate,formattedFeedbacks}
-                    console.log(newData);
-                    return(newData)
+                    const reports = formattedRideDate?.reports.map((reports:report)=> ({
+                        ...reports,
+                        formattedDate:moment(reports.date).format("DD-MM-YYYY")
+                    }))
+                        const newData ={...formattedRideDate,formattedFeedbacks,reports}
+                        console.log(newData);
+                        return(newData)
             }
             return ""
         } catch (error) {

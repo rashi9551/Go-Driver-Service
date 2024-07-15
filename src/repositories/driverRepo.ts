@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import Driver, { DriverInterface, RideDetails } from "../entities/driver";
-import { Message, RidePayment, feedback, report } from "../utilities/interface";
+import { Message, RidePayment, feedback, redeem, report } from "../utilities/interface";
 import { driverData,Registration,Identification,DriverImage,vehicleDatas,locationData } from "../utilities/interface";
 
 
@@ -294,6 +294,48 @@ export default class driverRepository{
             return((error as Error).message);
         }
     }
+    redeemWalletRazorpay = async (data: redeem): Promise<DriverInterface | string> => {
+        const { balance, upiId, driver_id } = data;
+    
+        try {
+            const driverData: DriverInterface | null = await Driver.findById(driver_id);
+            
+            if (driverData) {
+                try {
+                    const driverNewBalance = driverData.wallet.balance - (Number(balance) );
+                    const driverTransaction = {
+                        date: new Date(),
+                        details: 'redeemed by driver',
+                        amount: Number(balance) ,
+                        status: 'Debit',
+                    };
+    
+                    const updatedDriver: DriverInterface | null = await Driver.findByIdAndUpdate(driver_id, {
+                        $set: {
+                            'wallet.balance': driverNewBalance,
+                        },
+                        $push: {
+                            'wallet.transactions': driverTransaction,
+                        }, 
+                    }, { new: true });
+    
+                    if (updatedDriver) {
+                        return updatedDriver;
+                    } else {
+                        throw new Error('Driver not found or update failed.');
+                    }
+                } catch (error) {
+                    console.error('Error updating driver:', error);
+                    return (error as Error).message; 
+                }
+            } else {
+                throw new Error('Driver not found.');
+            }
+        } catch (error) {
+            console.error('Error finding driver:', error);
+            return (error as Error).message; 
+        }
+    };
 
     rideCompleteUpdate=async(data:RidePayment):Promise<DriverInterface | String |undefined>=>{
         try {

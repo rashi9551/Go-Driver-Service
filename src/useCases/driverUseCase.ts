@@ -98,22 +98,27 @@ export default class dirverUseCase{
             const {balance,upiId}=data
             const amount=Number(balance)
               
-            const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
-                apiVersion: "2024-06-20",
-            });
+            // const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
+            //     apiVersion: "2024-06-20",
+            // });
+            // const testStripeAccountID = 'acct_12345';
 
-            const payout = await stripe.payouts.create(
-                {
-                  amount: amount * 100, 
-                  currency: 'inr',
-                },
-                {
-                  stripeAccount: "8978ugbhs556",
-                }
-              );
+            // const payout = await stripe.payouts.create(
+            //     {
+            //       amount: amount * 100, 
+            //       currency: 'inr',
+            //     },
+            //     {
+            //       stripeAccount: testStripeAccountID
+            //     }
+            //   );
 
-              console.log(payout,"-=-=-");
-              
+            const driverData:DriverInterface=await driverRepo.redeemWalletRazorpay(data) as DriverInterface
+            if(driverData._id){
+                return ({message:"Success"})
+            }else{
+                return ({message:"something went wrong"})
+            } 
         } catch (error) {
             throw new Error((error as Error).message)
         }

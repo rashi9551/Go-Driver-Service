@@ -294,7 +294,7 @@ export default class driverRepository{
             return((error as Error).message);
         }
     }
-    redeemWalletRazorpay = async (data: redeem): Promise<DriverInterface | string> => {
+    redeemWalletRazorpay = async (data: redeem): Promise<DriverInterface | string |Message> => {
         const { balance, upiId, driver_id } = data;
     
         try {

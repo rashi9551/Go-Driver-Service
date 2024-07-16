@@ -1,6 +1,6 @@
 import { DriverInterface } from "../entities/driver"
 import driverRepository from "../repositories/driverRepo"
-import { Message, RidePayment, feedback, redeem, report } from "../utilities/interface"
+import { Message, RidePayment, feedback, redeem, referral, report } from "../utilities/interface"
 import { driverData } from "../utilities/interface"
 import Razorpay  from "razorpay"
 import Stripe from "stripe";
@@ -123,4 +123,5 @@ export default class dirverUseCase{
             throw new Error((error as Error).message)
         }
     }
+   
 }

@@ -1,6 +1,6 @@
 import moment from "moment";
 import { DriverInterface } from "../entities/driver";
-import { RidePayment, driverData, feedback, redeem, report } from "../utilities/interface";
+import { RidePayment, driverData, feedback, redeem, referral, report } from "../utilities/interface";
 import dirverUseCase from "../useCases/driverUseCase";
 
 const dirverUseCases=new dirverUseCase()
@@ -18,7 +18,8 @@ export default class driverControl{
                     ...feedbacks,
                     formattedDate: moment(feedbacks.date).format("DD-MM-YYYY"),
                 }));
-                const newData = { ...formattedDriverData, formattedFeedbacks };
+                const formattedTransactions = formattedDriverData.wallet.transactions.sort((a:{date:Date},b:{date:Date}) => new Date(b.date).getTime() - new Date(a.date).getTime()); 
+                const newData = { ...formattedDriverData, formattedFeedbacks,formattedTransactions };
                 return(newData);
             } else {
                 return({ message: "Soemthing Internal Error"});
@@ -109,5 +110,6 @@ export default class driverControl{
             
         }
     }
+    
 
 }

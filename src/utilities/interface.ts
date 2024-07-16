@@ -101,6 +101,10 @@ export interface redeem{
   driver_id:string,
   upiId:string,
 }
+export interface referral{
+  reffered_code:string,
+  name:string,
+}
 
 export interface UpdateDriverStatusData {
   reason: string;

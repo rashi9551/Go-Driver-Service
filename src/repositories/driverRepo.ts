@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import Driver, { DriverInterface, RideDetails } from "../entities/driver";
-import { Message, RidePayment, feedback, redeem, report } from "../utilities/interface";
+import { Message, RidePayment, feedback, redeem, referral, report } from "../utilities/interface";
 import { driverData,Registration,Identification,DriverImage,vehicleDatas,locationData } from "../utilities/interface";
 
 
@@ -336,6 +336,7 @@ export default class driverRepository{
             return (error as Error).message; 
         }
     };
+   
 
     rideCompleteUpdate=async(data:RidePayment):Promise<DriverInterface | String |undefined>=>{
         try {

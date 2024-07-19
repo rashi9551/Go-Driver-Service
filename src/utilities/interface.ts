@@ -112,6 +112,11 @@ export interface UpdateDriverStatusData {
   id: string;
 }
 
+export interface testerLogin{
+  password:string,
+  email:string
+}
+
 export interface AuthResponse {
   message: string;
   name: string;

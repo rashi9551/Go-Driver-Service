@@ -21,6 +21,10 @@ export default class MessageHandler {
     console.log("The operation is", operation, data);
 
     switch (operation) {
+      case "tester-login":
+        response=await loginController.testerLogin(data)
+        break;
+
       case "login-check":
         response=await loginController.checkLogin(data)
         break;

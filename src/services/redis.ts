@@ -5,10 +5,10 @@ import 'dotenv'
 const client = createClient({
     url: process.env.REDIS_URL // Use redis-service as the hostname
   });
-// client.on('error', (err) => {
-//     console.error('Redis Client Error', err);
-// });
-// client.connect().catch(console.error);
+client.on('error', (err) => {
+    console.error('Redis Client Error', err);
+});
+client.connect().catch(console.error);
 
 // Set OTP and email in Redis with an expiration time
 export const otpSetData = async (email: string, otp: string): Promise<void> => {

@@ -3,6 +3,8 @@ import bcrypt from "../services/bcrypt";
 import driverRepository from "../repositories/driverRepo";
 import { DriverInterface } from "../entities/driver";
 import { DriverData,Identification,identification,driverImage,vehicleDatas,locationData, driverData } from "../utilities/interface";
+import { sendOtp } from "../services/otpSending";
+import { getOtpByEmail, otpSetData } from "../services/redis";
 
 const driverRepo=new driverRepository()
 
@@ -12,38 +14,44 @@ export default class registrationUseCase{
     register=async(DriverData:DriverData)=>{
         try {
     
-            const {name ,email,mobile ,password ,reffered_code}=DriverData
-            const referral_code=refferalCode()
-            const hashedPassword=await bcrypt.securePassword(password)
-            const newDriver={
-                name,
-                email,
-                mobile,
-                password:hashedPassword,
-                referral_code
-                
-            }
-            const response=await driverRepo.saveDriver(newDriver)
-            if(typeof response !== "string" && response.email){
-                return {message: "Success",driverId:response._id};
+            const {name ,email,mobile ,password ,reffered_code,otp}=DriverData
+            const redisOtp=await getOtpByEmail(email)        
+            if(redisOtp==otp?.toString()){
+                const referral_code=refferalCode()
+                const hashedPassword=await bcrypt.securePassword(password)
+                const newDriver={
+                    name,
+                    email,
+                    mobile,
+                    password:hashedPassword,
+                    referral_code
+                    
+                }
+                const response=await driverRepo.saveDriver(newDriver)
+                if(typeof response !== "string" && response.email){                    
+                    return {message: "Success",driverId:response._id};
+                }
+            }else{
+                return {message: "Incorrect Otp"};
             }
         } catch (error) {
             
         }
     }
-    checkDriver = async(mobile:number)=>{
+    checkDriver = async(mobile:number,email:string,name:string)=>{
         try {
-            const response = await driverRepo.findDriver(mobile) as DriverInterface
+            const response = await driverRepo.findDriver(email) as DriverInterface
+            console.log(response,"ithu response");
             if (response) {
-            // Get the first driver from the array
                 if (response.identification) {
                     return { message: "Driver login" };
                 } else {
                     return { message: "Driver must fill documents", driverId: response._id };
                 }
-            
         }
-            return "Driver not registered";
+        const otp:string=await sendOtp(email,name) as string
+        await otpSetData(email,otp)
+        return { message: "Otp sended successfully",otp };
         } catch (error) {
             return { message: (error as Error).message };
         }

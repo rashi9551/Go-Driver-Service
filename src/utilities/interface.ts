@@ -39,6 +39,7 @@ export interface RidePayment {
 
 
 export interface DriverData{
+  otp?:string,
   name:string,
   email:string,
   mobile:number,

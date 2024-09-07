@@ -3,14 +3,16 @@ import auth from "../middleware/auth";
 import { DriverInterface } from "../entities/driver";
 import { testerLogin } from "../utilities/interface";
 import { comparePassword } from "../utilities/passwordCompare";
+import { sendOtp } from "../services/otpSending";
+import { getOtpByEmail, otpSetData } from "../services/redis";
 
 const driverRepo=new driverReposiory()
 
 
 export default class loginUseCase{
-    loginCheckDriver= async (mobile: number) => {
+    loginCheckDriver= async (email:string) => {
         try {
-            const response = await driverRepo.findDriver(mobile) as DriverInterface
+            const response = await driverRepo.findDriver(email) as DriverInterface
             console.log(response)
             if (response) {
                 if (                
@@ -21,7 +23,9 @@ export default class loginUseCase{
                     ) {
                     const token = await auth.createToken(response._id.toString(),'15m');
                     const refreshToken = await auth.createToken(response._id.toString(),'7d');
-                    return { message: "Success", name: response.name, refreshToken,token, _id:response._id };
+                    const otp:string= await sendOtp(email,response.name) as string
+                    await otpSetData(email,otp)
+                    return { message: "Success", name: response.name, refreshToken,token, _id:response._id ,otp};
                 } else if (response.account_status === "Rejected") {
                     return { message: "Rejected", driverId:response._id };
                 } else if (response.account_status === "Blocked") {
@@ -33,6 +37,20 @@ export default class loginUseCase{
                 }
             } else return { message: "No user found" };
             
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+    verifyOtp= async (otp: number,email:string) => {
+        try {
+            const redisOtp=await getOtpByEmail(email)
+            if(redisOtp==otp?.toString()){
+                return { message: "Success"};
+
+            }else{
+                return {message:"Invalid Otp"}
+            }
         } catch (error) {
             console.log(error);
             

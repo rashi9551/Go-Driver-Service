@@ -25,9 +25,9 @@ export default class driverRepository{
 
         }
     }
-    findDriver=async (mobile:number):Promise<DriverInterface |string>=>{
+    findDriver=async (email:string):Promise<DriverInterface |string>=>{
         try {
-            const driverData :DriverInterface=await Driver.findOne({mobile:mobile}) as DriverInterface
+            const driverData :DriverInterface=await Driver.findOne({email}) as DriverInterface
             return driverData
         } catch (error) {
             return (error as Error).message;

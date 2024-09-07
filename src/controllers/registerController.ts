@@ -6,14 +6,15 @@ const registrationUseCase= new registrationUseCases()
 
 export default class registerController{
     register=async(data:DriverData)=>{        
-        const {name ,email,mobile ,password ,reffered_code}=data
+        const {name ,email,mobile ,password ,reffered_code,otp}=data
         const userData={
             name,
             email,
             mobile,
             password,
             reffered_code,
-            joiningDate:Date.now()
+            joiningDate:Date.now(),
+            otp
         }
         try {
             const response=await registrationUseCase.register(userData)
@@ -22,10 +23,10 @@ export default class registerController{
             return({ error: (error as Error).message });
         }
     }
-    checkDriver=async(data:{mobile:number})=>{
-        const {mobile}=data
+    checkDriver=async(data:{mobile:number,email:string,name:string})=>{
+        const {mobile,email,name}=data
         try {
-            const response=await registrationUseCase.checkDriver(mobile)
+            const response=await registrationUseCase.checkDriver(mobile,email,name)
             return(response)
         } catch (error) {
             return({ error: (error as Error).message });

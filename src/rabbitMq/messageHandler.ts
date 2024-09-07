@@ -29,6 +29,10 @@ export default class MessageHandler {
         response=await loginController.checkLogin(data)
         break;
 
+      case "driver-verifyOtp":
+        response=await loginController.verifyOtp(data)
+        break;
+
       case "google-login":
         response=await loginController.checkGoogleLoginDriver(data)
         break;

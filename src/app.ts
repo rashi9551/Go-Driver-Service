@@ -11,6 +11,8 @@ class App{
       this.app=express()
       this.app.listen(process.env.DRIVER_PORT,()=>{
         console.log(`server  http://localhost:${process.env.DRIVER_PORT}`);
+        console.log(process.env.REDIS_URL);
+        
         
       })
         RabbitMQClient.initialize();
